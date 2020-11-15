@@ -9,7 +9,7 @@ const Wrapper = styled.section`
 
 export function Layout({ children }) {
   let hasSider = false;
-  React.Children.forEach(children, child => (child.type.displayName === "Layout-Sider" ? (hasSider = true) : null));
+  React.Children.forEach(children, child => (child.type.displayName === Sider.displayName ? (hasSider = true) : null));
   return <Wrapper hasSider={hasSider}>{children}</Wrapper>;
 }
 

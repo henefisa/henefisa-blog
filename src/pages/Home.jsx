@@ -8,9 +8,10 @@ import TagList from "../components/Tags/index";
 import Box from "../components/Box";
 import Avatar from "../components/Avatar";
 import { Categories, Category } from "../components/Category";
+import Pagination from "../components/Pagination/index";
 
 const Section = styled.section`
-  padding-top: 100px;
+  padding: 100px 0;
 `;
 
 const SidebarBox = styled(Box)`
@@ -31,6 +32,24 @@ const SidebarBox = styled(Box)`
     font-size: 15px;
     color: var(--secondary-color);
   }
+
+  .tags {
+    text-align: left;
+    li {
+      color: var(--secondary-color);
+      margin: 0 3px 6px 0;
+      display: inline-block;
+      background: #eff2f5;
+      padding: 5px 10px;
+      font-size: 14px;
+      transition: 0.3s ease-in-out;
+      cursor: pointer;
+      &:hover {
+        background: #e5e8eb;
+        color: #131517;
+      }
+    }
+  }
 `;
 
 export default function Home() {
@@ -38,7 +57,7 @@ export default function Home() {
     <>
       <Slider />
       <Container>
-        <Section>
+        <Section style={{ paddingBottom: 0 }}>
           <TagList />
         </Section>
         <Section>
@@ -47,6 +66,7 @@ export default function Home() {
               <Post />
               <Post />
               <Post />
+              <Pagination total={100} />
             </Content>
             <Sider style={{ paddingLeft: "25px" }} boxWidth="355">
               <SidebarBox>
@@ -82,6 +102,19 @@ export default function Home() {
                 <SmallPost />
                 <SmallPost />
                 <SmallPost />
+              </SidebarBox>
+              <SidebarBox>
+                <h6 className="title">Tags</h6>
+                <ul className="tags">
+                  <li>Art</li>
+                  <li>Design</li>
+                  <li>Event</li>
+                  <li>Fashion</li>
+                  <li>Food</li>
+                  <li>Inspiration</li>
+                  <li>Movie</li>
+                  <li>Music</li>
+                </ul>
               </SidebarBox>
             </Sider>
           </Layout>
