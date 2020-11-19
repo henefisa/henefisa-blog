@@ -3,6 +3,11 @@ import styled from "styled-components";
 export const Categories = styled.ul`
   list-style-type: none;
   padding: 0;
+  max-height: 200px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Category = styled.li`

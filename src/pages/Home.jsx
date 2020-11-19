@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Slider from "../components/Silder/index";
 import { Layout, Content, Sider, Container, Section } from "../components/Layout/index";
@@ -7,6 +7,7 @@ import TagList from "../components/Tags/index";
 import Box from "../components/Box";
 import Avatar from "../components/Avatar";
 import { Categories, Category } from "../components/Category";
+import firebase from "firebase";
 import ListPost from "../components/Post/ListPosts";
 
 const SidebarBox = styled(Box)`
@@ -48,6 +49,26 @@ const SidebarBox = styled(Box)`
 `;
 
 export default function Home() {
+  const [tags, setTags] = useState([]);
+
+  const getTags = useCallback(() => {
+    firebase
+      .firestore()
+      .collection("tag")
+      .orderBy("frequency", "desc")
+      .get()
+      .then(snapshot => {
+        const data = [];
+        snapshot.docs.forEach(doc => data.push({ id: doc.id, data: doc.data() }));
+        setTags(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    getTags();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <Slider />
@@ -71,22 +92,12 @@ export default function Home() {
               <SidebarBox>
                 <h6 className="title">Categories</h6>
                 <Categories>
-                  <Category>
-                    <span>Art</span>
-                    <span>12</span>
-                  </Category>
-                  <Category>
-                    <span>Fashion</span>
-                    <span>15</span>
-                  </Category>
-                  <Category>
-                    <span>Lifestyle</span>
-                    <span>17</span>
-                  </Category>
-                  <Category>
-                    <span>Nature</span>
-                    <span>11</span>
-                  </Category>
+                  {tags.map(tag => (
+                    <Category key={tag.id}>
+                      <span>{tag.data.name}</span>
+                      <span>{tag.data.frequency}</span>
+                    </Category>
+                  ))}
                 </Categories>
               </SidebarBox>
               <SidebarBox>
@@ -98,14 +109,9 @@ export default function Home() {
               <SidebarBox>
                 <h6 className="title">Tags</h6>
                 <ul className="tags">
-                  <li>Art</li>
-                  <li>Design</li>
-                  <li>Event</li>
-                  <li>Fashion</li>
-                  <li>Food</li>
-                  <li>Inspiration</li>
-                  <li>Movie</li>
-                  <li>Music</li>
+                  {tags.map(tag => (
+                    <li key={tag.id}>{tag.data.name}</li>
+                  ))}
                 </ul>
               </SidebarBox>
             </Sider>

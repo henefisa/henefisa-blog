@@ -9,7 +9,7 @@ export default function BasicLayout({ children }) {
       <LayoutHeader sticky={{ top: 0, left: 0 }}>
         <Header />
       </LayoutHeader>
-      <Content>{children}</Content>
+      <Content style={{ minHeight: "calc(100vh - 330px)" }}>{children}</Content>
       <LayoutFooter>
         <Footer />
       </LayoutFooter>

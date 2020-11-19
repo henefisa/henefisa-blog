@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import Author from "../../components/Author";
 import { Container, Section } from "../../components/Layout";
 import Comment from "../../components/Comment/index";
 import WriteComment from "../../components/Comment/WriteComment";
+import Loading from "../../components/Loading/index";
+import moment from "moment";
+import firebase from "firebase";
 
 const Background = styled.div`
   background-image: url(${props => props.url || ""});
@@ -69,71 +73,120 @@ const PostContent = styled.article`
   p {
     margin-bottom: 10px;
   }
+
+  .tag-wrapper {
+    margin-top: 30px;
+    h6 {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .tags {
+      .tag {
+        margin-right: 5px;
+        transition: 0.3s;
+        cursor: pointer;
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
 `;
 
 export default function BlogPost() {
+  const { id } = useParams();
+  const [post, setPost] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    firebase
+      .firestore()
+      .collection("posts")
+      .doc(id)
+      .get()
+      .then(doc => {
+        (async () => {
+          const data = doc.data();
+          const author = await data.authorRef.get().then(doc => doc.data());
+          setPost({ ...data, author });
+          setLoading(false);
+        })();
+      });
+  }, [id]);
+
   return (
     <>
-      <Background url="/blog-minimal-bg.jpg">
-        <div className="content">
-          <h1 className="post-name">Test post</h1>
-          <h4 className="details">
-            <span className="date">June 6, 2018</span> - <span className="category">Category</span> -{" "}
-            <span className="author">By John Doe</span>
-          </h4>
-        </div>
-      </Background>
-      <Container style={{ maxWidth: 700 }}>
-        <PostContent>
-          <div className="image-container">
-            <div className="large-image">
-              <img src="/blog-minimal-post-1.jpg" alt="blog post" />
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <Background url="/blog-minimal-bg.jpg">
+            <div className="content">
+              <h1 className="post-name">{post.title}</h1>
+              <h4 className="details">
+                <span className="date">{moment(moment.duration(post.date, "seconds")).format("ll")}</span> -{" "}
+                <span className="author">{`${post.author.firstName} ${post.author.lastName}`}</span>
+              </h4>
             </div>
-          </div>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus autem corporis asperiores, quos sunt
-            voluptatem alias dolores facilis. Temporibus iusto reiciendis voluptatum sequi autem aspernatur qui
-            perspiciatis numquam explicabo illo?
-          </p>
-          <blockquote className="blockquote">
-            <p>
-              Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu,
-              consequat vitae, eleifend ac, enim.
-            </p>
-          </blockquote>
-          <p>
-            Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim
-            justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-          </p>
-          <div className="image-container">
-            <div className="small-image">
-              <img src="/blog-minimal-post-1.jpg" alt="blog post" />
-            </div>
-            <div className="small-image">
-              <img src="/blog-minimal-post-1.jpg" alt="blog post" />
-            </div>
-          </div>
-          <p>
-            You can use the mark tag to highlight text. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-            Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
-          </p>
-          <div className="tag-wrapper">
-            <h6>Tags</h6>
-            <div className="tags">
-              <span className="tag">Clothing</span>
-              <span className="tag">Lifestyle</span>
-              <span className="tag">Travel</span>
-            </div>
-          </div>
-        </PostContent>
-      </Container>
-      <Author />
-      <Container style={{ maxWidth: 700 }}>
-        <Section>
-          <Comment />
-          <WriteComment />
-        </Section>
-      </Container>
+          </Background>
+          <Container style={{ maxWidth: 700 }}>
+            <PostContent>
+              {post.content}
+              {/* <div className="image-container">
+                <div className="large-image">
+                  <img src="/blog-minimal-post-1.jpg" alt="blog post" />
+                </div>
+              </div>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus autem corporis asperiores, quos
+                sunt voluptatem alias dolores facilis. Temporibus iusto reiciendis voluptatum sequi autem aspernatur qui
+                perspiciatis numquam explicabo illo?
+              </p>
+              <blockquote className="blockquote">
+                <p>
+                  Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu,
+                  consequat vitae, eleifend ac, enim.
+                </p>
+              </blockquote>
+              <p>
+                Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In
+                enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
+              </p>
+              <div className="image-container">
+                <div className="small-image">
+                  <img src="/blog-minimal-post-1.jpg" alt="blog post" />
+                </div>
+                <div className="small-image">
+                  <img src="/blog-minimal-post-1.jpg" alt="blog post" />
+                </div>
+              </div>
+              <p>
+                You can use the mark tag to highlight text. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,
+                justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
+              </p> */}
+              <div className="tag-wrapper">
+                <h6>Tags</h6>
+                <div className="tags">
+                  {post.tags.map((tag, index) => (
+                    <span className="tag" key={index}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </PostContent>
+          </Container>
+          <Author author={post.author} />
+          <Container style={{ maxWidth: 700 }}>
+            <Section>
+              <Comment />
+              <WriteComment />
+            </Section>
+          </Container>
+        </>
+      )}
     </>
   );
 }

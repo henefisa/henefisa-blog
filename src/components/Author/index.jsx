@@ -22,15 +22,12 @@ const AuthorWrapper = styled.div`
   }
 `;
 
-export default function Author() {
+export default function Author({ author }) {
   return (
     <AuthorWrapper>
       <div className="author">
-        <Avatar src="/blog-classic-avatar.jpg" name="Caroline Williams" size="large" center/>
-        <p className="description">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque
-          penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-        </p>
+        <Avatar src={author.avatar} name={author.firstName + " " + author.lastName} size="large" center />
+        <p className="description">{author.description}</p>
       </div>
     </AuthorWrapper>
   );
