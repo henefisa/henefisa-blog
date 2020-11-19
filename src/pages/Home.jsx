@@ -1,18 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import Slider from "../components/Silder/index";
-import { Layout, Content, Sider, Container } from "../components/Layout/index";
-import Post from "../components/Post/index";
+import { Layout, Content, Sider, Container, Section } from "../components/Layout/index";
 import SmallPost from "../components/Post/Small";
 import TagList from "../components/Tags/index";
 import Box from "../components/Box";
 import Avatar from "../components/Avatar";
 import { Categories, Category } from "../components/Category";
-import Pagination from "../components/Pagination/index";
-
-const Section = styled.section`
-  padding: 100px 0;
-`;
+import ListPost from "../components/Post/ListPosts";
 
 const SidebarBox = styled(Box)`
   border: 1px solid #e3e6e9;
@@ -63,10 +58,7 @@ export default function Home() {
         <Section>
           <Layout>
             <Content style={{ paddingRight: "25px" }}>
-              <Post />
-              <Post />
-              <Post />
-              <Pagination total={100} />
+              <ListPost />
             </Content>
             <Sider style={{ paddingLeft: "25px" }} boxWidth="355">
               <SidebarBox>

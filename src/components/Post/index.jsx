@@ -1,4 +1,6 @@
+import moment from "moment";
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import HoverBox from "../HoverBox";
 
@@ -12,11 +14,12 @@ const PostContainer = styled.article`
     align-items: center;
     font-size: 14px;
     color: #7c7c7c;
-    margin: 10px 0;
+    margin: 30px 0 10px;
     .tags {
       text-transform: uppercase;
       .tag {
         transition: 0.3s ease-in-out;
+        margin-right: 5px;
       }
       .tag:hover {
         cursor: pointer;
@@ -80,26 +83,29 @@ const PostContainer = styled.article`
   }
 `;
 
-export default function Post({ overlayColor }) {
+export default function Post({ overlayColor, title, date, description, id, tags = [] }) {
+  console.log(tags);
   return (
     <PostContainer>
       <HoverBox url="/blog-minimal-post-1.jpg" boxHeight="450px" overlayColor={overlayColor} />
       <div className="post-overview">
         <div className="tags">
-          <span className="tag">Lifestyle</span>
+          {tags.map((tag, index) => (
+            <span className="tag" key={index}>
+              {tag}
+            </span>
+          ))}
         </div>
         <div className="dates">
-          <span>Nov 3, 2020</span>
+          <span>{moment.utc(moment.duration(date.seconds, "seconds")).format("ll")}</span>
         </div>
       </div>
       <div className="post-content">
-        <h5 className="title">Benefits of Minimalism</h5>
-        <p className="description">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum
-          sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies
-          nec, pellentesque eu, pretium quis, sem.
-        </p>
-        <button className="read_more-btn">Read more</button>
+        <h5 className="title">{title}</h5>
+        <p className="description">{description}</p>
+        <Link to={`/blog/${id}`} className="read_more-btn">
+          Read more
+        </Link>
       </div>
     </PostContainer>
   );

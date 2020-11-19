@@ -40,7 +40,7 @@ function calculatePage(total, pageSize) {
   return ~~((total - 1) / pageSize) + 1;
 }
 
-export default function Pagination({ current = 1, total = 10, pageSize = 10 }) {
+export default function Pagination({ current = 1, total = 10, pageSize = 10, onChange }) {
   const [page, setPage] = useState(current);
   const allPages = calculatePage(total, pageSize);
   const pager = [];
@@ -75,6 +75,7 @@ export default function Pagination({ current = 1, total = 10, pageSize = 10 }) {
         page = 1;
       }
       setPage(page);
+      onChange(page);
     }
     return page;
   };

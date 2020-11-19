@@ -79,8 +79,12 @@ export const Container = styled.div`
     flex &&
     `
     display: flex;
-    justify-content: ${flex.justify};
-    align-items: ${flex.align};
-    flex-wrap: ${flex.wrap};
+    justify-content: ${flex.justify || ""};
+    align-items: ${flex.align || ""};
+    flex-wrap: ${flex.wrap || ""};
   `}
+`;
+
+export const Section = styled.section`
+  padding: 100px 0;
 `;

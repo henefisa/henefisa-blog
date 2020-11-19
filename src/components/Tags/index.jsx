@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import HoverBox from "../HoverBox/index";
 import { Container } from "../Layout/index";
+import firebase from "firebase";
 
 const Item = styled.div`
   flex: 0 1 345px;
@@ -20,29 +21,33 @@ const Title = styled.h6`
 const { Content } = HoverBox;
 
 export default function Tags() {
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("tag")
+      .orderBy("frequency", "desc")
+      .limit(3)
+      .get()
+      .then(snapshot => {
+        const data = [];
+        snapshot.docs.forEach(doc => data.push({ id: doc.id, data: doc.data() }));
+        setTags(data);
+      });
+  }, []);
+
   return (
     <Container flex={{ justify: "space-between", align: "center", wrap: "wrap" }}>
-      <Item>
-        <HoverBox url="/blog-minimal-post-1.jpg">
-          <Content center>
-            <Title>Fashion</Title>
-          </Content>
-        </HoverBox>
-      </Item>
-      <Item>
-        <HoverBox url="/blog-minimal-post-2.jpg">
-          <Content center>
-            <Title>Lifestyle</Title>
-          </Content>
-        </HoverBox>
-      </Item>
-      <Item>
-        <HoverBox url="/blog-minimal-post-1.jpg">
-          <Content center>
-            <Title>Travel</Title>
-          </Content>
-        </HoverBox>
-      </Item>
+      {tags.map((tag, index) => (
+        <Item key={index}>
+          <HoverBox url={`https://picsum.photos/345/220?random=${index}`}>
+            <Content center>
+              <Title>{tag.data.name}</Title>
+            </Content>
+          </HoverBox>
+        </Item>
+      ))}
     </Container>
   );
 }

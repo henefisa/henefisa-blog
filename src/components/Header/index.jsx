@@ -8,7 +8,7 @@ const MainHeader = styled.div`
     color: #fff;
     height: 80px;
     .brand {
-      font-size: 2rem;
+      font-size: 1.75rem;
       letter-spacing: 2px;
       font-weight: 600;
     }
@@ -40,9 +40,9 @@ const MainHeader = styled.div`
   }
 `;
 
-export default function Header() {
+export default function Header(props) {
   return (
-    <MainHeader>
+    <MainHeader {...props}>
       <Container className="header-content" flex={{ justify: "space-between", align: "center" }}>
         <h1 className="brand">henefisa</h1>
         <nav className="navigation">
