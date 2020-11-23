@@ -59,6 +59,7 @@ export default function ListPost() {
   }, [page]);
 
   useEffect(() => {
+    let isMount = true;
     (async () => {
       total.current = await getSize();
     })();
@@ -73,8 +74,11 @@ export default function ListPost() {
         snapshot.docs.forEach(doc => data.push({ id: doc.id, data: doc.data() }));
         last.current = snapshot.docs[snapshot.docs.length - 1];
         first.current = snapshot.docs[0];
-        setPosts(data);
+        isMount && setPosts(data);
       });
+    return () => {
+      isMount = false;
+    };
   }, []);
 
   return (

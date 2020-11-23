@@ -6,7 +6,7 @@ import Footer from "../components/Footer/index";
 export default function BasicLayout({ children }) {
   return (
     <Layout>
-      <LayoutHeader sticky={{ top: 0, left: 0 }}>
+      <LayoutHeader>
         <Header />
       </LayoutHeader>
       <Content style={{ minHeight: "calc(100vh - 330px)" }}>{children}</Content>

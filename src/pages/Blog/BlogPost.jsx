@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Author from "../../components/Author";
 import { Container, Section } from "../../components/Layout";
 import Comment from "../../components/Comment/index";
@@ -8,6 +8,8 @@ import WriteComment from "../../components/Comment/WriteComment";
 import Loading from "../../components/Loading/index";
 import moment from "moment";
 import firebase from "firebase";
+import getAuthor from "../../utils/getAuthor";
+import { useAuth } from "../../context/Auth";
 
 const Background = styled.div`
   background-image: url(${props => props.url || ""});
@@ -98,9 +100,13 @@ export default function BlogPost() {
   const { id } = useParams();
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
+  const [user] = useAuth();
+
+  const commentsRef = useRef(null);
 
   useEffect(() => {
     setLoading(true);
+    let isMount = true;
     firebase
       .firestore()
       .collection("posts")
@@ -109,13 +115,16 @@ export default function BlogPost() {
       .then(doc => {
         (async () => {
           const data = doc.data();
-          const author = await data.authorRef.get().then(doc => doc.data());
-          setPost({ ...data, author });
-          setLoading(false);
+          const author = await getAuthor(data.authorRef);
+          commentsRef.current = data.commentsRef;
+          isMount && setPost({ ...data, author: { ...author } });
+          isMount && setLoading(false);
         })();
       });
+    return () => {
+      isMount = false;
+    };
   }, [id]);
-
   return (
     <>
       {loading ? (
@@ -124,16 +133,16 @@ export default function BlogPost() {
         <>
           <Background url="/blog-minimal-bg.jpg">
             <div className="content">
-              <h1 className="post-name">{post.title}</h1>
+              <h1 className="post-name">{post?.title}</h1>
               <h4 className="details">
-                <span className="date">{moment(moment.duration(post.date, "seconds")).format("ll")}</span> -{" "}
-                <span className="author">{`${post.author.firstName} ${post.author.lastName}`}</span>
+                <span className="date">{moment.unix(post.createdAt.seconds).format("ll")}</span> -{" "}
+                <span className="author">{`${post?.author?.firstName} ${post?.author?.lastName}`}</span>
               </h4>
             </div>
           </Background>
           <Container style={{ maxWidth: 700 }}>
             <PostContent>
-              {post.content}
+              {post?.content}
               {/* <div className="image-container">
                 <div className="large-image">
                   <img src="/blog-minimal-post-1.jpg" alt="blog post" />
@@ -169,7 +178,7 @@ export default function BlogPost() {
               <div className="tag-wrapper">
                 <h6>Tags</h6>
                 <div className="tags">
-                  {post.tags.map((tag, index) => (
+                  {post?.tags.map((tag, index) => (
                     <span className="tag" key={index}>
                       {tag}
                     </span>
@@ -178,11 +187,17 @@ export default function BlogPost() {
               </div>
             </PostContent>
           </Container>
-          <Author author={post.author} />
+          <Author author={post?.author} />
           <Container style={{ maxWidth: 700 }}>
             <Section>
-              <Comment />
-              <WriteComment />
+              <Comment commentsRef={commentsRef.current} />
+              {user.ref ? (
+                <WriteComment commentsRef={commentsRef.current} />
+              ) : (
+                <p>
+                  You must <Link to="/login">login</Link> to write comment.
+                </p>
+              )}
             </Section>
           </Container>
         </>

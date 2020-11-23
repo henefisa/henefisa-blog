@@ -1,5 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import * as Yup from "yup";
+import { Form, Formik, Field } from "formik";
+import firebase from "firebase";
+import { useAuth } from "../../context/Auth";
 
 const WriteCommentContainer = styled.div`
   text-align: center;
@@ -21,7 +25,7 @@ const WriteCommentContainer = styled.div`
       font: 300 16px "Open Sans", sans-serif;
       &.form-textarea {
         height: 140px;
-        margin: 0 8px 16px;
+        margin-bottom: 16px;
         min-width: calc(100% - 16px);
         min-height: 70px;
       }
@@ -58,24 +62,42 @@ const WriteCommentContainer = styled.div`
   }
 `;
 
-export default function WriteComment() {
+const CommentSchema = Yup.object().shape({
+  message: Yup.string()
+    .min(10, "Your comment is too short!")
+    .max(3000, "You reach maximun characters!")
+    .required("You must provide message!")
+});
+
+export default function WriteComment({ commentsRef }) {
+  const [user] = useAuth();
+  const handleSubmit = (values, { resetForm }) => {
+    const data = {
+      authorRef: user.ref,
+      message: values.message,
+      createdAt: firebase.firestore.Timestamp.now()
+    };
+    commentsRef.update({
+      listComments: firebase.firestore.FieldValue.arrayUnion(data),
+      total: firebase.firestore.FieldValue.increment(1)
+    });
+    resetForm();
+  };
+
   return (
     <WriteCommentContainer>
       <h4 className="comment">Write comment</h4>
-      <form className="comment-form">
-        <div className="form-row">
-          <div>
-            <input type="text" name="name" placeholder="Name" className="form-item" />
-          </div>
-          <div>
-            <input type="email" name="email" placeholder="Email" className="form-item" />
-          </div>
-        </div>
-        <div className="form-row">
-          <textarea name="message" className="form-item form-textarea"></textarea>
-        </div>
-        <button className="form-button">Post comment</button>
-      </form>
+      <Formik initialValues={{ message: "" }} validationSchema={CommentSchema} onSubmit={handleSubmit}>
+        {({ errors }) => (
+          <Form className="comment-form">
+            <Field name="message" className="form-item form-textarea" component="textarea" />
+            {errors.message && <p style={{ textAlign: "left", color: "red" }}>{errors.message}</p>}
+            <button className="form-button" type="submit">
+              Post comment
+            </button>
+          </Form>
+        )}
+      </Formik>
     </WriteCommentContainer>
   );
 }

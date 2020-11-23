@@ -96,7 +96,7 @@ export default function Post({ overlayColor, title, date, description, id, tags 
           ))}
         </div>
         <div className="dates">
-          <span>{moment.utc(moment.duration(date.seconds, "seconds")).format("ll")}</span>
+          <span>{moment.unix(date?.seconds).format("ll")}</span>
         </div>
       </div>
       <div className="post-content">

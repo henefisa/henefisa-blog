@@ -32,16 +32,6 @@ Content.displayName = "Layout-Content";
 
 export const Header = styled.header`
   flex: 0 0 auto;
-  ${({ sticky }) =>
-    sticky &&
-    `
-    position: sticky;
-    top: ${sticky.top}px;
-    left: ${sticky.left}px;
-    right: ${sticky.right}px;
-    bottom: ${sticky.bottom}px;
-    z-index: ${sticky.zIndex || 9990}
-  `}
 `;
 
 Header.displayName = "Layout-Header";

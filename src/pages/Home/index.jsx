@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import Slider from "../components/Silder/index";
-import { Layout, Content, Sider, Container, Section } from "../components/Layout/index";
-import SmallPost from "../components/Post/Small";
-import TagList from "../components/Tags/index";
-import Box from "../components/Box";
-import Avatar from "../components/Avatar";
-import { Categories, Category } from "../components/Category";
+import Slider from "../../components/Silder/index";
+import { Layout, Content, Sider, Container, Section } from "../../components/Layout/index";
+import SmallPost from "../../components/Post/Small";
+import TagList from "../../components/Tags/index";
+import Box from "../../components/Box";
+import Avatar from "react-avatar";
+import { Categories, Category } from "../../components/Category";
 import firebase from "firebase";
-import ListPost from "../components/Post/ListPosts";
+import ListPost from "../../components/Post/ListPosts";
 
 const SidebarBox = styled(Box)`
   border: 1px solid #e3e6e9;
@@ -50,8 +50,8 @@ const SidebarBox = styled(Box)`
 
 export default function Home() {
   const [tags, setTags] = useState([]);
-
-  const getTags = useCallback(() => {
+  const [adminInfo, setAdminInfo] = useState({});
+  const getTags = useCallback(isMount => {
     firebase
       .firestore()
       .collection("tag")
@@ -60,14 +60,29 @@ export default function Home() {
       .then(snapshot => {
         const data = [];
         snapshot.docs.forEach(doc => data.push({ id: doc.id, data: doc.data() }));
-        setTags(data);
+        isMount && setTags(data);
+      });
+  }, []);
+
+  const getAdminInfo = useCallback(isMount => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc("admin")
+      .get()
+      .then(doc => {
+        isMount && setAdminInfo(doc.data());
       });
   }, []);
 
   useEffect(() => {
-    getTags();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    let isMount = true;
+    getTags(isMount);
+    getAdminInfo(isMount);
+    return () => {
+      isMount = false;
+    };
+  }, [getTags, getAdminInfo]);
 
   return (
     <>
@@ -84,10 +99,8 @@ export default function Home() {
             <Sider style={{ paddingLeft: "25px" }} boxWidth="355">
               <SidebarBox>
                 <h6 className="title">About me</h6>
-                <Avatar src="/blog-classic-avatar.jpg" size="large" center />
-                <p>
-                  Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                </p>
+                {adminInfo.avatar && <Avatar src={adminInfo.avatar} size={100} round style={{ marginBottom: 10 }} />}
+                <p>{adminInfo.description}</p>
               </SidebarBox>
               <SidebarBox>
                 <h6 className="title">Categories</h6>

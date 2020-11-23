@@ -24,6 +24,7 @@ export default function Tags() {
   const [tags, setTags] = useState([]);
 
   useEffect(() => {
+    let isMount = true;
     firebase
       .firestore()
       .collection("tag")
@@ -33,8 +34,11 @@ export default function Tags() {
       .then(snapshot => {
         const data = [];
         snapshot.docs.forEach(doc => data.push({ id: doc.id, data: doc.data() }));
-        setTags(data);
+        isMount && setTags(data);
       });
+    return () => {
+      isMount = false;
+    };
   }, []);
 
   return (
