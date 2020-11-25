@@ -3,6 +3,7 @@ import styled from "styled-components";
 import HoverBox from "../HoverBox/index";
 import { Container } from "../Layout/index";
 import firebase from "firebase";
+import { Link } from "react-router-dom";
 
 const Item = styled.div`
   flex: 0 1 345px;
@@ -47,7 +48,9 @@ export default function Tags() {
         <Item key={index}>
           <HoverBox url={`https://picsum.photos/345/220?random=${index}`}>
             <Content center>
-              <Title>{tag.data.name}</Title>
+              <Title>
+                <Link to={`/tags?filter=${tag.data.name}`}>{tag.data.name}</Link>
+              </Title>
             </Content>
           </HoverBox>
         </Item>

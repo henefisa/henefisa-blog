@@ -82,6 +82,7 @@ export default function Comment({ commentsRef }) {
   const [comments, setComments] = useState([]);
   const getComments = useCallback(
     () =>
+      commentsRef &&
       commentsRef.onSnapshot(doc => {
         (async () => {
           const data = doc.data();
@@ -95,7 +96,7 @@ export default function Comment({ commentsRef }) {
 
   useEffect(() => {
     const unsubscribe = getComments();
-    return () => unsubscribe();
+    return () => unsubscribe && unsubscribe();
   }, [getComments]);
 
   return (

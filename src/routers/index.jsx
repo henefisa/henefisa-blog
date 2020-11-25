@@ -17,6 +17,16 @@ export default function MainRouter() {
               <Route path={route.path} component={route.component} key={index} />
             )
           )} */}
+          <Route
+            path="/admin"
+            render={({ match: { url } }) => (
+              <Switch>
+                <Route path={`${url}/test`} component={() => <div>Test admin</div>} />
+              </Switch>
+            )}
+          />
+          <Route path="/tags" exact component={lazy(() => import("../pages/Tags/index"))} />
+          <Route path="/user/:userId" component={lazy(() => import("../pages/Profile/index"))} exact />
           <Route path="/login" component={lazy(() => import("../pages/Login/index"))} exact />
           <Route path="/register" component={lazy(() => import("../pages/Register/index"))} exact />
           <Route path="/blog/:id" component={lazy(() => import("../pages/Blog/BlogPost"))} exact />

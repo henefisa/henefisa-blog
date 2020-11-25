@@ -5,11 +5,13 @@ import { AuthContext } from "./context/Auth";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import firebase from "firebase";
+import "tailwindcss/tailwind.css";
 
 function App() {
   const [user, setUser] = useState({
     data: {},
-    ref: null
+    ref: null,
+    id: ""
   });
 
   useEffect(() => {
@@ -19,10 +21,9 @@ function App() {
           .firestore()
           .collection("users")
           .where("email", "==", user.email)
-          .get()
-          .then(snapshot => {
+          .onSnapshot(snapshot => {
             const user = snapshot.docs[0];
-            setUser({ data: user.data(), ref: user.ref });
+            setUser({ data: user.data(), ref: user.ref, id: user.id });
           });
       } else {
         setUser({ data: {}, ref: null });

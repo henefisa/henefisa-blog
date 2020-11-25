@@ -77,10 +77,11 @@ export default function WriteComment({ commentsRef }) {
       message: values.message,
       createdAt: firebase.firestore.Timestamp.now()
     };
-    commentsRef.update({
-      listComments: firebase.firestore.FieldValue.arrayUnion(data),
-      total: firebase.firestore.FieldValue.increment(1)
-    });
+    commentsRef &&
+      commentsRef.update({
+        listComments: firebase.firestore.FieldValue.arrayUnion(data),
+        total: firebase.firestore.FieldValue.increment(1)
+      });
     resetForm();
   };
 

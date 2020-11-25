@@ -21,7 +21,7 @@ async function getSize() {
     .then(snapshot => snapshot.size);
 }
 
-export default function ListPost() {
+export default function ListPost({ filter = "all" }) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(0);
   const total = useRef(0);
@@ -63,10 +63,12 @@ export default function ListPost() {
     (async () => {
       total.current = await getSize();
     })();
-    firebase
-      .firestore()
-      .collection("posts")
-      .orderBy("createdAt", "desc")
+    const ref =
+      filter === "all"
+        ? firebase.firestore().collection("posts").orderBy("createdAt", "desc")
+        : firebase.firestore().collection("posts").orderBy("createdAt", "desc").where("tags", "array-contains", filter);
+
+    ref
       .limit(limit)
       .get()
       .then(snapshot => {
@@ -79,7 +81,7 @@ export default function ListPost() {
     return () => {
       isMount = false;
     };
-  }, []);
+  }, [filter]);
 
   return (
     <div>

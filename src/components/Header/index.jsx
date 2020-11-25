@@ -118,7 +118,7 @@ export default function Header(props) {
                 </>
               }
               options={[
-                { name: "Profile", onClick: () => history.push(`/users/${user.ref.id}`) },
+                { name: "Profile", onClick: () => history.push(`/user/${user.ref.id}`) },
                 { name: "Logout", onClick: () => firebase.auth().signOut() }
               ]}
             />

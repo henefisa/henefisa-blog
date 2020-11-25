@@ -9,6 +9,7 @@ import Avatar from "react-avatar";
 import { Categories, Category } from "../../components/Category";
 import firebase from "firebase";
 import ListPost from "../../components/Post/ListPosts";
+import { Link } from "react-router-dom";
 
 const SidebarBox = styled(Box)`
   border: 1px solid #e3e6e9;
@@ -107,8 +108,10 @@ export default function Home() {
                 <Categories>
                   {tags.map(tag => (
                     <Category key={tag.id}>
-                      <span>{tag.data.name}</span>
-                      <span>{tag.data.frequency}</span>
+                      <Link to={`/tags?filter=${tag.data.name}`}>
+                        <span>{tag.data.name}</span>
+                        <span>{tag.data.frequency}</span>
+                      </Link>
                     </Category>
                   ))}
                 </Categories>
@@ -123,7 +126,9 @@ export default function Home() {
                 <h6 className="title">Tags</h6>
                 <ul className="tags">
                   {tags.map(tag => (
-                    <li key={tag.id}>{tag.data.name}</li>
+                    <li key={tag.id}>
+                      <Link to={`/tags?filter=${tag.data.name}`}>{tag.data.name}</Link>
+                    </li>
                   ))}
                 </ul>
               </SidebarBox>
