@@ -5,7 +5,7 @@ import { AuthContext } from "./context/Auth";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import firebase from "firebase";
-import "tailwindcss/tailwind.css";
+import "./tailwind.output.css";
 
 function App() {
   const [user, setUser] = useState({

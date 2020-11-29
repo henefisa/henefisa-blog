@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "autoprefixer": "^10.0.2",
     "clsx": "^1.1.1",
     "firebase": "^8.0.2",
     "formik": "^2.2.5",
     "moment": "^2.29.1",
+    "postcss": "^8.1.10",
     "react": "^17.0.1",
     "react-avatar": "^3.9.7",
     "react-dom": "^17.0.1",
@@ -15,9 +17,12 @@
     "react-toastify": "^6.1.0",
     "styled-components": "^5.2.1",
     "swiper": "^6.3.5",
+    "tailwindcss": "^2.0.1",
     "yup": "^0.30.0"
   },
   "scripts": {
+    "build:css": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
+    "prestart": "npm run build:css",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -41,9 +46,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "autoprefixer": "^10.0.2",
-    "postcss-cli": "^8.3.0",
-    "tailwindcss": "^2.0.1"
-  }
+  "devDependencies": {}
 }

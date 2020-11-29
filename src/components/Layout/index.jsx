@@ -7,10 +7,10 @@ const Wrapper = styled.section`
   flex-direction: ${props => (props.hasSider ? "row" : "column")};
 `;
 
-export function Layout({ children }) {
+export function Layout({ children, className }) {
   let hasSider = false;
   React.Children.forEach(children, child => (child.type.displayName === Sider.displayName ? (hasSider = true) : null));
-  return <Wrapper hasSider={hasSider}>{children}</Wrapper>;
+  return <Wrapper hasSider={hasSider} className={className}>{children}</Wrapper>;
 }
 
 Layout.displayName = "Layout-Wrapper";

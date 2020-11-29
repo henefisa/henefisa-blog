@@ -54,7 +54,7 @@ export default function Slider() {
     <Swiper navigation autoplay={{ delay: 5000 }} loop style={{ height: 600 }} pagination>
       <SwiperSlide>
         <Background url="/blog-classic-slider-1.jpg">
-          <div className="container slide-content">
+          <div className="container slide-content mx-auto">
             <h6 className="tags">Lifestyle, Travel</h6>
             <h1 className="title">Working remotely</h1>
             <button className="read-more">Read more</button>
@@ -63,7 +63,7 @@ export default function Slider() {
       </SwiperSlide>
       <SwiperSlide>
         <Background url="/blog-classic-slider-2.jpg">
-          <div className="container slide-content">
+          <div className="container slide-content mx-auto">
             <h6 className="tags">Lifestyle, Travel</h6>
             <h1 className="title">Working remotely</h1>
             <button className="read-more">Read more</button>

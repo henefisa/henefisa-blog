@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { Field, Form, Formik } from "formik";
 import { useParams } from "react-router-dom";
 import firebase from "firebase";
@@ -8,59 +8,59 @@ import * as Yup from "yup";
 import { useAuth } from "../../context/Auth";
 import { toast } from "react-toastify";
 
-const ProfileWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  min-height: calc(100vh - 330px);
-  padding: 100px 0 50px;
-  background: url("https://picsum.photos/1920/1080");
-  background-size: cover;
-  background-repeat: no-repeat;
-  .profile {
-    max-width: 900px;
-    text-align: center;
-    width: 100%;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 15px 6px rgba(0, 0, 0, 0.4);
-    .avatar {
-      margin-top: -25px;
-      border: 1px solid #fff;
-    }
-    .infomation {
-      max-width: 300px;
-      margin: 0 auto;
-      .user-form {
-        text-align: left;
-        margin-top: 50px;
-        padding: 10px;
-        .form-field {
-          display: block;
-          width: 100%;
-          margin: 0 auto;
-          margin-bottom: 10px;
-          font-size: 20px;
-          border: 1px solid #ddd;
-          padding: 5px;
-        }
-        .form-button {
-          float: right;
-          font-size: 20px;
-          background: #dedede;
-          border: none;
-          padding: 10px 20px;
-          color: #333;
-          border-radius: 5px;
-          transition: 0.3s ease-in;
-          &:hover {
-            color: #dedede;
-            background: #333;
-          }
-        }
-      }
-    }
-  }
-`;
+// const ProfileWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   min-height: calc(100vh - 330px);
+//   padding: 100px 0 50px;
+//   background: url("https://picsum.photos/1920/1080");
+//   background-size: cover;
+//   background-repeat: no-repeat;
+//   .profile {
+//     max-width: 900px;
+//     text-align: center;
+//     width: 100%;
+//     background: #fff;
+//     border-radius: 5px;
+//     box-shadow: 0 0 15px 6px rgba(0, 0, 0, 0.4);
+//     .avatar {
+//       margin-top: -25px;
+//       border: 1px solid #fff;
+//     }
+//     .infomation {
+//       max-width: 300px;
+//       margin: 0 auto;
+//       .user-form {
+//         text-align: left;
+//         margin-top: 50px;
+//         padding: 10px;
+//         .form-field {
+//           display: block;
+//           width: 100%;
+//           margin: 0 auto;
+//           margin-bottom: 10px;
+//           font-size: 20px;
+//           border: 1px solid #ddd;
+//           padding: 5px;
+//         }
+//         .form-button {
+//           float: right;
+//           font-size: 20px;
+//           background: #dedede;
+//           border: none;
+//           padding: 10px 20px;
+//           color: #333;
+//           border-radius: 5px;
+//           transition: 0.3s ease-in;
+//           &:hover {
+//             color: #dedede;
+//             background: #333;
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 
 const schema = Yup.object().shape({
   email: Yup.string().email("Invalid email!").required("Email is required!"),
@@ -104,57 +104,77 @@ export default function Profile() {
   };
 
   return (
-    <ProfileWrapper>
-      {userData.id && (
-        <div className="profile">
-          <div className="meta">
-            <Avatar
-              name={userData.data.firstName + " " + userData.data.lastName}
-              round
-              className="avatar"
-              src={userData.data.avatar}
-            />
-            <h3 className="name">{userData.data.firstName + " " + userData.data.lastName}</h3>
-            <p>{userData.description}</p>
-          </div>
-          <div className="infomation">
-            <Formik
-              validationSchema={schema}
-              initialValues={{
-                email: userData.data.email,
-                firstName: userData.data.firstName,
-                lastName: userData.data.lastName
-              }}
-              onSubmit={handleSubmit}
-            >
-              {({ errors, isSubmitting }) => (
-                <Form className="user-form">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <Field name="email" className="form-field" id="email" />
-                  {errors.email && <p>{errors.email}</p>}
-                  <label htmlFor="firstName" className="form-label">
-                    First Name
-                  </label>
-                  <Field name="firstName" className="form-field" id="firstName" />
-                  {errors.firstName && <p>{errors.firstName}</p>}
-                  <label htmlFor="lastName" className="form-label">
-                    Last Name
-                  </label>
-                  <Field name="lastName" className="form-field" id="lastName" />
-                  {errors.lastName && <p>{errors.lastName}</p>}
-                  {user.id === userData.id && (
-                    <button type="submit" className="form-button" disabled={isSubmitting}>
-                      Save
-                    </button>
-                  )}
-                </Form>
-              )}
-            </Formik>
+    <div className="bg-gray-100 min-h-screen py-6 flex flex-col justify-center sm:py-12">
+      <div className="relative py-3 sm:max-w-xl sm:mx-auto w-2/4 ">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+          <div className="max-w-md mx-auto ">
+            {userData.id && (
+              <div className="relative">
+                <div className="mx-auto text-center">
+                  <Avatar
+                    name={userData.data.firstName + " " + userData.data.lastName}
+                    round
+                    className=""
+                    src={userData.data.avatar}
+                  />
+                  <h3 className="text-base md:text-xl pt-5">
+                    {userData.data.firstName + " " + userData.data.lastName}
+                  </h3>
+                  <p className="py-3">{userData.description}</p>
+                </div>
+                <div className="">
+                  <Formik
+                    validationSchema={schema}
+                    initialValues={{
+                      email: userData.data.email,
+                      firstName: userData.data.firstName,
+                      lastName: userData.data.lastName
+                    }}
+                    onSubmit={handleSubmit}
+                  >
+                    {({ errors, isSubmitting }) => (
+                      <Form>
+                        <div className="flex align-center border rounded p-2 mb-4">
+                          <label htmlFor="email" className="font-bold mr-2">
+                            Email
+                          </label>
+                          <Field name="email" className="w-full" id="email" />
+                        </div>
+                        {errors.email && <p>{errors.email}</p>}
+
+                        <div className="flex align-center border rounded p-2 mb-4">
+                          <label htmlFor="firstName" className="font-bold mr-2">
+                            First Name
+                          </label>
+                          <Field name="firstName" className="" id="firstName" />
+                        </div>
+                        {errors.firstName && <p>{errors.firstName}</p>}
+                        <div className="flex align-center border rounded p-2 mb-4">
+                          <label htmlFor="lastName" className="font-bold mr-2">
+                            Last Name
+                          </label>
+                          <Field name="lastName" className="" id="" />
+                        </div>
+                        {errors.lastName && <p>{errors.lastName}</p>}
+                        {user.id === userData.id && (
+                          <button
+                            type="submit"
+                            className="float-right transition-background transition-color duration-300 ease-in-out bg-blue-400 hover:bg-blue-600 transform hover:scale-110 px-8 py-3 rounded-lg text-white disabled:opacity-50 focus:ring-2"
+                            disabled={isSubmitting}
+                          >
+                            Save
+                          </button>
+                        )}
+                      </Form>
+                    )}
+                  </Formik>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      )}
-    </ProfileWrapper>
+      </div>
+    </div>
   );
 }
