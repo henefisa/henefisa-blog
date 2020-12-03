@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase";
 import moment from "moment";
-import { Button, Card, Modal, Popconfirm, Space, Table, Tag } from "antd";
-import { toast } from "react-toastify";
+import { Button, Card, Modal, notification, Popconfirm, Space, Table, Tag } from "antd";
 import PostForm from "../../forms/Post";
 
 const defaultFormData = {
@@ -14,14 +13,25 @@ export default function Posts() {
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [visible, setVisible] = useState(false);
-
-  const handleDeletePost = id => {
-    firebase
-      .firestore()
-      .collection("posts")
-      .doc(id)
-      .delete()
-      .then(() => toast.success("Deleted!"));
+  const [loading, setLoading] = useState(false);
+  const handleDeletePost = async id => {
+    setLoading(true);
+    try {
+      const ref = firebase.firestore().collection("posts").doc(id);
+      const data = (await ref.get()).data();
+      const tagsRef = firebase.firestore().collection("tags");
+      await Promise.all(
+        data?.tags?.map(async tag => {
+          const ref = (await tagsRef.where("name", "==", tag).get()).docs[0].ref;
+          ref.update({ frequency: firebase.firestore.FieldValue.increment(-1) });
+        })
+      );
+      notification.success("Deleted!");
+    } catch (err) {
+      notification.error({ message: "Something went wrong. Please try again!" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const closeModal = () => setVisible(false);
@@ -83,7 +93,9 @@ export default function Posts() {
             Edit
           </Button>
           <Popconfirm onConfirm={() => handleDeletePost(data.key)} title="Are you sure to delete this post?">
-            <Button danger>Delete</Button>
+            <Button danger loading={loading}>
+              Delete
+            </Button>
           </Popconfirm>
         </Space>
       )

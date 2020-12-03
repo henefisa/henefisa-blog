@@ -60,6 +60,24 @@ export default function Post({ data, closeModal }) {
     } else {
       commentsRef = hasComment.ref;
     }
+
+    const tagsRef = await Promise.all(
+      tags.map(async tag => await firebase.firestore().collection("tags").where("name", "==", tag).get())
+    );
+
+    tagsRef.forEach((ref, index) => {
+      if (ref.empty) {
+        firebase.firestore().collection("tags").add({
+          frequency: 1,
+          name: tags[index]
+        });
+      } else {
+        ref.docs[0].ref.update({
+          frequency: firebase.firestore.FieldValue.increment(1)
+        });
+      }
+    });
+
     ref
       .set({
         authorRef: user.ref,
