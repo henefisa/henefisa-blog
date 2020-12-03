@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import * as Yup from "yup";
-import { Form, Formik, Field } from "formik";
 import firebase from "firebase";
 import { useAuth } from "../../context/Auth";
 
@@ -62,13 +60,6 @@ const WriteCommentContainer = styled.div`
   }
 `;
 
-const CommentSchema = Yup.object().shape({
-  message: Yup.string()
-    .min(10, "Your comment is too short!")
-    .max(3000, "You reach maximun characters!")
-    .required("You must provide message!")
-});
-
 export default function WriteComment({ commentsRef }) {
   const [user] = useAuth();
   const handleSubmit = (values, { resetForm }) => {
@@ -88,17 +79,6 @@ export default function WriteComment({ commentsRef }) {
   return (
     <WriteCommentContainer>
       <h4 className="comment">Write comment</h4>
-      <Formik initialValues={{ message: "" }} validationSchema={CommentSchema} onSubmit={handleSubmit}>
-        {({ errors }) => (
-          <Form className="comment-form">
-            <Field name="message" className="form-item form-textarea" component="textarea" />
-            {errors.message && <p style={{ textAlign: "left", color: "red" }}>{errors.message}</p>}
-            <button className="form-button" type="submit">
-              Post comment
-            </button>
-          </Form>
-        )}
-      </Formik>
     </WriteCommentContainer>
   );
 }

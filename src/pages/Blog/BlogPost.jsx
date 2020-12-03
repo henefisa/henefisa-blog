@@ -142,7 +142,7 @@ export default function BlogPost() {
           </Background>
           <Container style={{ maxWidth: 700 }}>
             <PostContent>
-              {post?.content}
+              <div dangerouslySetInnerHTML={{ __html: post?.content }} style={{wordBreak: "break-word"}}></div>
               {/* <div className="image-container">
                 <div className="large-image">
                   <img src="/blog-minimal-post-1.jpg" alt="blog post" />

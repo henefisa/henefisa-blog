@@ -1,13 +1,15 @@
 import clsx from "clsx";
 import React, { useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Avatar from "react-avatar";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import firebase from "firebase";
 
 export default function AdminLayout(props) {
   const menuRef = useRef(null);
   const siderRef = useRef(null);
-
+  const showAdminMenu = useRef(null);
   const location = useLocation();
-
+  const history = useHistory();
   const handleSiderToggle = () => {
     const { classList } = siderRef.current;
     if (classList.contains("-translate-x-full")) {
@@ -17,6 +19,11 @@ export default function AdminLayout(props) {
       classList.remove("translate-x-0");
       classList.add("-translate-x-full");
     }
+  };
+
+  const handleShowAdminMenu = () => {
+    const { classList } = showAdminMenu.current;
+    classList.toggle("hidden");
   };
 
   const handleClick = () => {
@@ -41,11 +48,28 @@ export default function AdminLayout(props) {
             className="w-full lg:w-auto flex-grow lg:flex-grow-0 lg:flex lg:items-center overflow-hidden lg:overflow-visible max-h-0 transition-all duration-300"
             ref={menuRef}
           >
-            <ul className="lg:flex justify-end pt-6 lg:pt-0">
-              <li className="p-2 hover:bg-blue-700 transition lg:px-5 lg:ml-2 rounded cursor-pointer">Nav 1</li>
-              <li className="p-2 hover:bg-blue-700 transition lg:px-5 lg:ml-2 rounded cursor-pointer">Nav 2</li>
-              <li className="p-2 hover:bg-blue-700 transition lg:px-5 lg:ml-2 rounded cursor-pointer">Nav 3</li>
-              <li className="p-2 hover:bg-blue-700 transition lg:px-5 lg:ml-2 rounded cursor-pointer">Nav 4</li>
+            <ul className="lg:flex justify-end pt-6 lg:pt-0 select-none">
+              <li
+                className="p-2 hover:bg-blue-700 transition lg:px-5 lg:ml-2 rounded cursor-pointer relative"
+                onClick={handleShowAdminMenu}
+              >
+                <Avatar name={"admin"} size={50} round />
+                <span className="ml-2">Admin</span>
+                <ul
+                  className="absolute top-full bg-gray-900 w-full left-0 rounded-b transition hidden"
+                  ref={showAdminMenu}
+                >
+                  <li
+                    className="p-2 hover:bg-blue-700 transition lg:px-5 rounded cursor-pointer"
+                    onClick={() => {
+                      firebase.auth().signOut();
+                      history.push("/login");
+                    }}
+                  >
+                    Logout
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
         </nav>

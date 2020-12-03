@@ -82,7 +82,19 @@ export default function Header(props) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  });
+  }, []);
+
+  const options = [
+    { name: "Profile", onClick: () => history.push(`/user/${user.ref.id}`) },
+    { name: "Logout", onClick: () => firebase.auth().signOut() }
+  ];
+
+  if (user?.data?.role?.includes("admin")) {
+    options.splice(1, 0, {
+      name: "Dashboard",
+      onClick: () => history.push("/admin/dashboard")
+    });
+  }
 
   return (
     <MainHeader {...props} className={clsx({ fixed: fixed })}>
@@ -117,10 +129,7 @@ export default function Header(props) {
                   <h3 style={{ fontWeight: 400 }}>{user.data.firstName + " " + user.data.lastName}</h3>
                 </>
               }
-              options={[
-                { name: "Profile", onClick: () => history.push(`/user/${user.ref.id}`) },
-                { name: "Logout", onClick: () => firebase.auth().signOut() }
-              ]}
+              options={options}
             />
           ) : (
             <>

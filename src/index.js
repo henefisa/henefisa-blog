@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import firebase from "firebase";
 import { BrowserRouter } from "react-router-dom";
-
-const firebaseConfig = {
+import 'antd/dist/antd.css';
+export const firebaseConfig = {
   apiKey: "AIzaSyDye_pFD-_cOmjlUUoKEkw4_CBU_JarYzg",
   authDomain: "henefisa-blog.firebaseapp.com",
   databaseURL: "https://henefisa-blog.firebaseio.com",

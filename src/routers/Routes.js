@@ -10,67 +10,80 @@ export const routes = [
   {
     path: "/admin",
     layout: AdminLayout,
+    role: "admin",
     children: [
       {
         path: "/admin",
         component: () => <Redirect to="/admin/dashboard" />,
-        exact: true
+        exact: true,
+        role: "admin"
       },
       {
         path: "/admin/dashboard",
         component: lazy(() => import("../pages/Admin/Dashboard")),
-        exact: true
+        exact: true,
+        role: "admin"
       },
       {
         path: "/admin/users",
         exact: true,
-        component: lazy(() => import("../pages/Admin/Users"))
+        component: lazy(() => import("../pages/Admin/Users")),
+        role: "admin"
       },
       {
         path: "/admin/posts",
         exact: true,
-        component: lazy(() => import("../pages/Admin/Posts"))
+        component: lazy(() => import("../pages/Admin/Posts")),
+        role: "admin"
       }
     ]
   },
   {
     path: "/",
     layout: BasicLayout,
+    role: "",
     children: [
       {
         path: "/tags",
         exact: true,
-        component: lazy(() => import("../pages/Tags/index"))
+        component: lazy(() => import("../pages/Tags/index")),
+        role: "user"
       },
       {
         path: "/user/:userId",
         exact: true,
-        component: lazy(() => import("../pages/Profile/index"))
+        component: lazy(() => import("../pages/Profile/index")),
+        role: "user"
       },
       {
         path: "/login",
         exact: true,
-        component: lazy(() => import("../pages/Login/index"))
+        component: lazy(() => import("../pages/Login/index")),
+        role: "user"
       },
       {
         path: "/register",
         exact: true,
-        component: lazy(() => import("../pages/Register/index"))
+        component: lazy(() => import("../pages/Register/index")),
+        role: "user"
       },
       {
         path: "/blog/:id",
         exact: true,
-        component: lazy(() => import("../pages/Blog/BlogPost"))
+        component: lazy(() => import("../pages/Blog/BlogPost")),
+        role: "user"
       },
       {
         path: "/blog",
         exact: true,
-        component: lazy(() => import("../pages/Blog/index"))
+        component: lazy(() => import("../pages/Blog/index")),
+        role: "user"
       },
       {
         path: "/",
         exact: true,
-        component: lazy(() => import("../pages/Home/index"))
+        component: lazy(() => import("../pages/Home/index")),
+        role: "user"
       }
     ]
   }

@@ -1,20 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import { Link, useHistory } from "react-router-dom";
 import firebase from "firebase";
 import { toast } from "react-toastify";
-
-const RegisterSchema = Yup.object().shape({
-  firstName: Yup.string().trim("First name is required!").required("First name is required!"),
-  lastName: Yup.string().trim("Last name is required!").required("Last name is required!"),
-  email: Yup.string().email("Invalid email!").required("Email is required!"),
-  password: Yup.string()
-    .min(6, "Your password too weak!")
-    .max(30, "You reach the limit!")
-    .required("Password is required!")
-});
 
 const Container = styled.div`
   display: grid;
@@ -176,64 +164,6 @@ export default function Register() {
   };
   return (
     <Container>
-      <div className="wrap">
-        <div className="picture">
-          <img src="/img-01.webp" alt="Computer" />
-        </div>
-        <Formik
-          initialValues={{ email: "", password: "", firstName: "", lastName: "" }}
-          validationSchema={RegisterSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ errors, touched, isSubmitting }) => (
-            <Form className="form">
-              <h1 className="form-header">Register</h1>
-              <div className="input-wrapper">
-                <div>
-                  <Field name="firstName" className="field-input" placeholder="First name" />
-                  <span className="input-icon">
-                    <i className="fas fa-user"></i>
-                  </span>
-                </div>
-                {errors.firstName && touched.firstName && <p className="field-error">{errors.firstName}</p>}
-              </div>
-              <div className="input-wrapper">
-                <div>
-                  <Field name="lastName" className="field-input" placeholder="Last name" />
-                  <span className="input-icon">
-                    <i className="fas fa-user"></i>
-                  </span>
-                </div>
-                {errors.lastName && touched.lastName && <p className="field-error">{errors.lastName}</p>}
-              </div>
-              <div className="input-wrapper">
-                <div>
-                  <Field name="email" className="field-input" placeholder="Email" />
-                  <span className="input-icon">
-                    <i className="fas fa-envelope"></i>
-                  </span>
-                </div>
-                {errors.email && touched.email && <p className="field-error">{errors.email}</p>}
-              </div>
-              <div className="input-wrapper">
-                <div>
-                  <Field name="password" type="password" className="field-input" placeholder="Password" />
-                  <span className="input-icon">
-                    <i className="fas fa-lock"></i>
-                  </span>
-                </div>
-                {errors.password && touched.password && <p className="field-error">{errors.password}</p>}
-              </div>
-              <button type="submit" className="button-submit">
-                Register
-              </button>
-              <Link to="/login" className="link">
-                Login to your account!
-              </Link>
-            </Form>
-          )}
-        </Formik>
-      </div>
     </Container>
   );
 }
