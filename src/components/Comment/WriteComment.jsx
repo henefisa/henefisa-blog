@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import firebase from "firebase";
 import { useAuth } from "../../context/Auth";
+import { Button, Form, Input, notification } from "antd";
+import { useForm } from "antd/lib/form/Form";
 
 const WriteCommentContainer = styled.div`
   text-align: center;
@@ -62,23 +64,38 @@ const WriteCommentContainer = styled.div`
 
 export default function WriteComment({ commentsRef }) {
   const [user] = useAuth();
-  const handleSubmit = (values, { resetForm }) => {
-    const data = {
-      authorRef: user.ref,
-      message: values.message,
-      createdAt: firebase.firestore.Timestamp.now()
-    };
-    commentsRef &&
-      commentsRef.update({
-        listComments: firebase.firestore.FieldValue.arrayUnion(data),
-        total: firebase.firestore.FieldValue.increment(1)
-      });
-    resetForm();
+  const [form] = useForm();
+  const handleFinish = async values => {
+    try {
+      const data = {
+        authorRef: user.ref,
+        message: values.message,
+        createdAt: firebase.firestore.Timestamp.now()
+      };
+      commentsRef &&
+        (await commentsRef.update({
+          listComments: firebase.firestore.FieldValue.arrayUnion(data),
+          total: firebase.firestore.FieldValue.increment(1)
+        }));
+      notification.success({ message: "Your comment has been posted!" });
+      form.resetFields();
+    } catch (err) {
+      console.log(err);
+      notification.error({ message: "Something went wrong. Please try again!" });
+    }
   };
 
   return (
     <WriteCommentContainer>
       <h4 className="comment">Write comment</h4>
+      <Form onFinish={handleFinish}>
+        <Form.Item label="Message" labelCol={{ span: 24 }} name="message">
+          <Input.TextArea placeholder="Enter your message here!" />
+          <Button htmlType="submit" style={{ marginTop: 10, float: "right" }}>
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
     </WriteCommentContainer>
   );
 }

@@ -25,15 +25,39 @@ export const routes = [
         role: "admin"
       },
       {
+        path: "/admin/users/create",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Users/create")),
+        role: "admin"
+      },
+      {
+        path: "/admin/users/edit/:userId",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Users/edit")),
+        role: "admin"
+      },
+      {
         path: "/admin/users",
         exact: true,
-        component: lazy(() => import("../pages/Admin/Users")),
+        component: lazy(() => import("../pages/Admin/Users/index")),
+        role: "admin"
+      },
+      {
+        path: "/admin/posts/create",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Posts/create")),
+        role: "admin"
+      },
+      {
+        path: "/admin/posts/edit/:postId",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Posts/edit")),
         role: "admin"
       },
       {
         path: "/admin/posts",
         exact: true,
-        component: lazy(() => import("../pages/Admin/Posts")),
+        component: lazy(() => import("../pages/Admin/Posts/index")),
         role: "admin"
       }
     ]

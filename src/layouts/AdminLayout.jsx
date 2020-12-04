@@ -1,125 +1,100 @@
-import clsx from "clsx";
-import React, { useRef } from "react";
-import Avatar from "react-avatar";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import React, { memo, useMemo, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { Layout, Menu, Avatar, Dropdown } from "antd";
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+  UploadOutlined
+} from "@ant-design/icons";
+
 import firebase from "firebase";
 
-export default function AdminLayout(props) {
-  const menuRef = useRef(null);
-  const siderRef = useRef(null);
-  const showAdminMenu = useRef(null);
-  const location = useLocation();
+const { SubMenu } = Menu;
+const { Header, Content, Sider, Footer } = Layout;
+
+function AdminLayout(props) {
+  const [collapsed, setCollapse] = useState(false);
   const history = useHistory();
-  const handleSiderToggle = () => {
-    const { classList } = siderRef.current;
-    if (classList.contains("-translate-x-full")) {
-      classList.remove("-translate-x-full");
-      classList.add("translate-x-0");
-    } else {
-      classList.remove("translate-x-0");
-      classList.add("-translate-x-full");
-    }
-  };
+  const location = useLocation();
+  const menu = useMemo(
+    () => (
+      <Menu>
+        <Menu.Item
+          key="logout"
+          onClick={() => {
+            firebase.auth().signOut().then(history.push("/login"));
+          }}
+        >
+          Logout
+        </Menu.Item>
+      </Menu>
+    ),
+    [history]
+  );
 
-  const handleShowAdminMenu = () => {
-    const { classList } = showAdminMenu.current;
-    classList.toggle("hidden");
-  };
-
-  const handleClick = () => {
-    const { classList } = menuRef.current;
-    classList.toggle("overflow-visible");
-    classList.toggle("max-h-screen");
-  };
+  const toggle = collapsed => setCollapse(prevState => !prevState);
 
   return (
-    <>
-      <header className="bg-gray-900 p-5 lg:ml-72 shadow-lg">
-        <nav className="container mx-auto text-gray-50 flex justify-between flex-wrap items-center">
-          <div>
-            <h1 className="text-2xl tracking-wide">Dashboard</h1>
-          </div>
-          <div className="flex items-center justify-center lg:hidden p-3 w-12 h-12">
-            <button onClick={handleClick}>
-              <i className="fas fa-bars"></i>
-            </button>
-          </div>
-          <div
-            className="w-full lg:w-auto flex-grow lg:flex-grow-0 lg:flex lg:items-center overflow-hidden lg:overflow-visible max-h-0 transition-all duration-300"
-            ref={menuRef}
-          >
-            <ul className="lg:flex justify-end pt-6 lg:pt-0 select-none">
-              <li
-                className="p-2 hover:bg-blue-700 transition lg:px-5 lg:ml-2 rounded cursor-pointer relative"
-                onClick={handleShowAdminMenu}
-              >
-                <Avatar name={"admin"} size={50} round />
-                <span className="ml-2">Admin</span>
-                <ul
-                  className="absolute top-full bg-gray-900 w-full left-0 rounded-b transition hidden"
-                  ref={showAdminMenu}
-                >
-                  <li
-                    className="p-2 hover:bg-blue-700 transition lg:px-5 rounded cursor-pointer"
-                    onClick={() => {
-                      firebase.auth().signOut();
-                      history.push("/login");
-                    }}
-                  >
-                    Logout
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
-      <div className="fixed bottom-2 left-2 lg:hidden w-12 h-12 bg-gray-800 text-white flex items-center justify-center rounded-full z-50">
-        <button className="text-xl" onClick={handleSiderToggle}>
-          <i className="fas fa-bars"></i>
-        </button>
-      </div>
-      <aside
-        className="fixed left-0 top-0 transform -translate-x-full lg:translate-x-0 transition-transform min-h-screen bg-gray-900 shadow-md w-72 "
-        ref={siderRef}
-      >
-        <h1 className="text-2xl p-5 bg-gray-900 text-white text-center">Henefisa</h1>
-        <ul className="py-5">
-          <li
-            className={clsx("mb-3 text-xl text-gray-50 hover:bg-blue-700 py-2 px-5 transition cursor-pointer", {
-              "bg-blue-700 text-gray-50": location.pathname === "/admin/dashboard"
+    <Layout>
+      <Sider trigger={null} collapsible collapsed={collapsed} style={{ minHeight: "100vh" }}>
+        <h1
+          style={{
+            color: "white",
+            fontSize: 24,
+            letterSpacing: "1px",
+            textAlign: "center",
+            margin: 0,
+            height: 80,
+            lineHeight: "80px"
+          }}
+        >
+          {collapsed ? "" : "Henefisa"}
+        </h1>
+        <Menu
+          theme="dark"
+          mode="inline"
+          onClick={target => history.push(target.key)}
+          selectedKeys={[location.pathname]}
+        >
+          <Menu.Item key="/admin/dashboard">Dashboard</Menu.Item>
+          <SubMenu title="Users" key="users">
+            <Menu.Item key="/admin/users">All Users</Menu.Item>
+            <Menu.Item key="/admin/users/create">Create User</Menu.Item>
+          </SubMenu>
+          <SubMenu title="Posts" key="posts">
+            <Menu.Item key="/admin/posts">All Posts</Menu.Item>
+            <Menu.Item key="/admin/posts/create">Create Post</Menu.Item>
+          </SubMenu>
+        </Menu>
+      </Sider>
+      <Layout>
+        <Header style={{ height: 80, lineHeight: "80px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: "100%" }}>
+            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+              className: "trigger",
+              onClick: toggle,
+              style: {
+                color: "white",
+                fontSize: 24
+              }
             })}
-          >
-            <Link to="/admin/dashboard" className="w-full block hover:text-gray-50">
-              Dashboard
-            </Link>
-          </li>
-          <li
-            className={clsx("mb-3 text-xl text-gray-50 hover:bg-blue-700 py-2 px-5 transition cursor-pointer", {
-              "bg-blue-700 text-gray-50": location.pathname === "/admin/posts"
-            })}
-          >
-            <Link to="/admin/posts" className="w-full block hover:text-gray-50">
-              Posts
-            </Link>
-          </li>
-          <li
-            className={clsx("mb-3 text-xl text-gray-50 hover:bg-blue-700 py-2 px-5 transition cursor-pointer", {
-              "bg-blue-700 text-gray-50": location.pathname === "/admin/users"
-            })}
-          >
-            <Link to="/admin/users" className="w-full block hover:text-gray-50">
-              Users
-            </Link>
-          </li>
-        </ul>
-      </aside>
-      <main style={{ minHeight: "calc(100vh - 120px)" }} className="lg:ml-72">
-        {props.children}
-      </main>
-      <footer className="lg:ml-72 h-12 flex items-center justify-center bg-gray-900 text-gray-50">
-        <h1 className="text-2xl">Henefisa admin</h1>
-      </footer>
-    </>
+            <Dropdown overlay={menu} placement="bottomCenter">
+              <div>
+                <Avatar size="large" icon={<UserOutlined />} style={{ display: "inline-grid", placeItems: "center" }} />
+                <span style={{ fontSize: 16, marginLeft: 10, color: "white" }}>Admin</span>
+              </div>
+            </Dropdown>
+          </div>
+        </Header>
+        <Content>{props.children}</Content>
+        <Footer>
+          <h3 style={{textAlign: "center"}}>Henefisa dashboard - Created by Trần Văn Nghĩa</h3>
+        </Footer>
+      </Layout>
+    </Layout>
   );
 }
+
+export default memo(AdminLayout);

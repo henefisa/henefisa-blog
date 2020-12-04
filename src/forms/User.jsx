@@ -2,10 +2,12 @@ import React from "react";
 import firebase from "firebase";
 import { firebaseConfig } from "../index";
 import { Button, Form, Input, message } from "antd";
+import { useHistory } from "react-router-dom";
 
 let secondApp = null;
 
-export default function User({ data, closeModal }) {
+export default function UserForm({ data }) {
+  const history = useHistory();
   const onFinish = async values => {
     try {
       if (data.type === "new") {
@@ -18,7 +20,14 @@ export default function User({ data, closeModal }) {
         });
         message.success("Create user success!");
         await secondApp.auth().signOut();
-        closeModal();
+        history.push("/admin/users");
+      } else if (data.type === "edit") {
+        await firebase.firestore().collection("users").doc(data.id).update({
+          firstName: values.firstName,
+          lastName: values.lastName
+        });
+        message.success("Updated!");
+        history.push("/admin/users");
       }
     } catch (err) {
       console.log(err.code);
@@ -37,7 +46,7 @@ export default function User({ data, closeModal }) {
     }
   };
 
-  return (
+  return data.user ? (
     <Form onFinish={onFinish} initialValues={{ firstName: data?.user?.firstName, lastName: data?.user?.lastName }}>
       {data.type === "new" && (
         <>
@@ -57,10 +66,10 @@ export default function User({ data, closeModal }) {
       </Form.Item>
       <div style={{ textAlign: "right" }}>
         <Button htmlType="submit">Submit</Button>
-        <Button htmlType="button" danger style={{ marginLeft: 10 }} onClick={closeModal}>
+        <Button htmlType="button" danger style={{ marginLeft: 10 }}>
           Cancel
         </Button>
       </div>
     </Form>
-  );
+  ) : null;
 }

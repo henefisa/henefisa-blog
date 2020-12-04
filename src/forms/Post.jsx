@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import firebase from "firebase";
 import { useAuth } from "../context/Auth";
-import { toast } from "react-toastify";
 import { Button, Input, Form, Tag, notification } from "antd";
 import { TweenOneGroup } from "rc-tween-one";
 import { PlusOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
 
 function uuid() {
   const temp_url = URL.createObjectURL(new Blob());
@@ -28,9 +28,10 @@ async function handleUploadImage(blob) {
   }
 }
 
-export default function Post({ data, closeModal }) {
+export default function PostForm({ data }) {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
+  const history = useHistory();
   const [input, setInput] = useState({
     value: "",
     visible: false
@@ -43,43 +44,43 @@ export default function Post({ data, closeModal }) {
   }, [data]);
 
   const onFinish = async values => {
-    let ref = {};
-    if (data?.post?.type === "edit") {
-      ref = firebase.firestore().collection("posts").doc(data?.post?.key);
-    } else {
-      ref = await firebase.firestore().collection("posts").add({});
-    }
-    const hasComment = await firebase.firestore().collection("comments").doc(ref.id).get();
-    let commentsRef = null;
-    if (!hasComment.exists) {
-      commentsRef = firebase.firestore().collection("comments").doc(ref.id);
-      commentsRef.set({
-        listComments: [],
-        total: 0
-      });
-    } else {
-      commentsRef = hasComment.ref;
-    }
-
-    const tagsRef = await Promise.all(
-      tags.map(async tag => await firebase.firestore().collection("tags").where("name", "==", tag).get())
-    );
-
-    tagsRef.forEach((ref, index) => {
-      if (ref.empty) {
-        firebase.firestore().collection("tags").add({
-          frequency: 1,
-          name: tags[index]
+    try {
+      let ref = {};
+      if (data?.post?.type === "edit") {
+        ref = firebase.firestore().collection("posts").doc(data?.post?.key);
+      } else {
+        ref = await firebase.firestore().collection("posts").add({});
+      }
+      const hasComment = await firebase.firestore().collection("comments").doc(ref.id).get();
+      let commentsRef = null;
+      if (!hasComment.exists) {
+        commentsRef = firebase.firestore().collection("comments").doc(ref.id);
+        commentsRef.set({
+          listComments: [],
+          total: 0
         });
       } else {
-        ref.docs[0].ref.update({
-          frequency: firebase.firestore.FieldValue.increment(1)
-        });
+        commentsRef = hasComment.ref;
       }
-    });
 
-    ref
-      .set({
+      const tagsRef = await Promise.all(
+        tags.map(async tag => await firebase.firestore().collection("tags").where("name", "==", tag).get())
+      );
+
+      tagsRef.forEach((ref, index) => {
+        if (ref.empty) {
+          firebase.firestore().collection("tags").add({
+            frequency: 1,
+            name: tags[index]
+          });
+        } else {
+          ref.docs[0].ref.update({
+            frequency: firebase.firestore.FieldValue.increment(1)
+          });
+        }
+      });
+
+      ref.set({
         authorRef: user.ref,
         commentsRef,
         content,
@@ -87,12 +88,13 @@ export default function Post({ data, closeModal }) {
         title: values.title,
         description: values.description,
         tags
-      })
-      .then(
-        () => notification.success({ message: "Post success!" }),
-        () => notification.error({ message: "Something went wrong. Please try again!" })
-      );
-    closeModal();
+      });
+      notification.success({ message: "Post success!" });
+      history.push("/admin/posts");
+    } catch (err) {
+      console.log(err);
+      notification.error({ message: "Something went wrong. Please try again!" });
+    }
   };
 
   const onEditorChange = content => {
@@ -112,7 +114,7 @@ export default function Post({ data, closeModal }) {
   const handleInputConfirm = e => {
     if (e.key === "Enter") e.preventDefault();
     if (input.value && !tags.includes(input.value)) {
-      setTags(prevState => [...prevState, input.value]);
+      setTags(prevState => [...prevState, input.value.replace(/\s\s+/g, " ")]);
     }
     setInput({ value: "", visible: false });
   };
@@ -138,12 +140,22 @@ export default function Post({ data, closeModal }) {
     );
   };
 
-  return (
+  return data.post ? (
     <Form onFinish={onFinish} initialValues={{ title: data?.post?.title, description: data?.post?.description }}>
-      <Form.Item label="Title" labelCol={{ span: 24 }} name="title">
+      <Form.Item
+        label="Title"
+        labelCol={{ span: 24 }}
+        name="title"
+        rules={[{ required: true, message: "Title is required!" }]}
+      >
         <Input placeholder="Title" />
       </Form.Item>
-      <Form.Item label="Description" labelCol={{ span: 24 }} name="description">
+      <Form.Item
+        label="Description"
+        labelCol={{ span: 24 }}
+        name="description"
+        rules={[{ required: true, message: "Description is required!" }]}
+      >
         <Input placeholder="Description" />
       </Form.Item>
       <div style={{ margin: "16px 0" }}>
@@ -202,10 +214,7 @@ export default function Post({ data, closeModal }) {
       />
       <div style={{ textAlign: "right", marginTop: 10 }}>
         <Button htmlType="submit">Submit</Button>
-        <Button htmlType="button" danger style={{ marginLeft: 10 }} onClick={closeModal}>
-          Cancel
-        </Button>
       </div>
     </Form>
-  );
+  ) : null;
 }

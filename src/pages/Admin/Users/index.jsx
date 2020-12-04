@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
 import firebase from "firebase";
-import User from "../../forms/User";
-import { Button, Card, Modal, Popconfirm, Space, Table } from "antd";
-
-const defaultFormData = {
-  type: "",
-  user: ""
-};
+import { Button, Card, Popconfirm, Space, Table } from "antd";
+import { Link } from "react-router-dom";
 
 export default function Users() {
   const [data, setData] = useState([]);
-  const [formData, setFormData] = useState(defaultFormData);
-  const [visible, setVisible] = useState(false);
-
-  const closeModal = () => {
-    setVisible(false);
-  };
 
   const handleDeleteUser = id => {
     console.log(id);
@@ -41,24 +30,19 @@ export default function Users() {
     {
       title: "Manage",
       key: "manage",
-      render: data => (
-        <Space>
-          <Button
-            onClick={() => {
-              setVisible(true);
-              setFormData({
-                type: "edit",
-                user: data
-              });
-            }}
-          >
-            Edit
-          </Button>
-          <Popconfirm onConfirm={() => handleDeleteUser(data.key)} title="Are you sure to delete this user?">
-            <Button danger>Delete</Button>
-          </Popconfirm>
-        </Space>
-      )
+      render: data => {
+        if (data.key === "admin") return null;
+        return (
+          <Space>
+            <Button>
+              <Link to={`/admin/users/edit/${data.key}`}>Edit</Link>
+            </Button>
+            <Popconfirm onConfirm={() => handleDeleteUser(data.key)} title="Are you sure to delete this user?">
+              <Button danger>Delete</Button>
+            </Popconfirm>
+          </Space>
+        );
+      }
     }
   ];
   useEffect(() => {
@@ -81,20 +65,12 @@ export default function Users() {
       <Card>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
           <h1 style={{ fontSize: 24 }}>Users</h1>
-          <Button
-            onClick={() => {
-              setVisible(true);
-              setFormData({ type: "new", user: {} });
-            }}
-          >
-            Create User
+          <Button>
+            <Link to="/admin/users/create">Create User</Link>
           </Button>
         </div>
         <Table columns={columns} dataSource={data} style={{ fontWeight: 600, overflow: "auto" }} sticky />
       </Card>
-      <Modal footer={null} visible={visible} onCancel={closeModal} destroyOnClose>
-        <User data={formData} closeModal={closeModal} />
-      </Modal>
     </div>
   );
 }
