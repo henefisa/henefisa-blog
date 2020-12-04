@@ -49,7 +49,7 @@ function Posts() {
       render: data => {
         return (
           <div
-            style={{ wordBreak: "break-word", maxWidth: 500, overflow: "auto" }}
+            style={{ wordBreak: "break-word", maxWidth: 500, maxHeight: 500, overflow: "auto" }}
             dangerouslySetInnerHTML={{ __html: data }}
           />
         );

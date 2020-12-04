@@ -55,7 +55,7 @@ export default function Home() {
   const getTags = useCallback(isMount => {
     firebase
       .firestore()
-      .collection("tag")
+      .collection("tags")
       .orderBy("frequency", "desc")
       .get()
       .then(snapshot => {
@@ -108,7 +108,10 @@ export default function Home() {
                 <Categories>
                   {tags.map(tag => (
                     <Category key={tag.id}>
-                      <Link to={`/tags?filter=${tag.data.name}`}>
+                      <Link
+                        to={`/tags?filter=${tag.data.name}`}
+                        style={{ color: "var(--secondary-color)", fontWeight: 400 }}
+                      >
                         <span>{tag.data.name}</span>
                         <span>{tag.data.frequency}</span>
                       </Link>
@@ -127,7 +130,9 @@ export default function Home() {
                 <ul className="tags">
                   {tags.map(tag => (
                     <li key={tag.id}>
-                      <Link to={`/tags?filter=${tag.data.name}`}>{tag.data.name}</Link>
+                      <Link to={`/tags?filter=${tag.data.name}`} style={{ color: "var(--secondary-color)" }}>
+                        {tag.data.name}
+                      </Link>
                     </li>
                   ))}
                 </ul>

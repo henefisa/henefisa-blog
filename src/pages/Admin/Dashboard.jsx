@@ -39,14 +39,19 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="p-3 container mx-auto">
+    <Card style={{ margin: 15 }}>
       <Row gutter={[16, 16]}>
         {data.map(dt => {
           const [key, count] = Object.entries(dt)[0];
           return (
             <Col span={24} md={12} lg={8} key={key}>
-              <Card>
-                <Statistic title={capitalizeFirstLetter(key)} value={count} valueStyle={{ color: "#3f8600" }} />
+              <Card style={{ background: "#eee" }}>
+                <Statistic
+                  title={capitalizeFirstLetter(key)}
+                  value={count}
+                  valueStyle={{ color: "#3f8600" }}
+                  style={{ fontSize: 24 }}
+                />
               </Card>
             </Col>
           );
@@ -56,6 +61,6 @@ export default function Dashboard() {
         <h1 style={{ margin: "20px 30px", fontSize: 24 }}>Tags</h1>
         <TagCloud data={tags} />
       </div>
-    </div>
+    </Card>
   );
 }

@@ -46,8 +46,8 @@ export default function PostForm({ data }) {
   const onFinish = async values => {
     try {
       let ref = {};
-      if (data?.post?.type === "edit") {
-        ref = firebase.firestore().collection("posts").doc(data?.post?.key);
+      if (data?.type === "edit") {
+        ref = firebase.firestore().collection("posts").doc(data?.id);
       } else {
         ref = await firebase.firestore().collection("posts").add({});
       }
@@ -89,7 +89,7 @@ export default function PostForm({ data }) {
         description: values.description,
         tags
       });
-      notification.success({ message: "Post success!" });
+      notification.success({ message: "Success!" });
       history.push("/admin/posts");
     } catch (err) {
       console.log(err);
@@ -114,7 +114,7 @@ export default function PostForm({ data }) {
   const handleInputConfirm = e => {
     if (e.key === "Enter") e.preventDefault();
     if (input.value && !tags.includes(input.value)) {
-      setTags(prevState => [...prevState, input.value.replace(/\s\s+/g, " ")]);
+      setTags(prevState => [...prevState, input.value.replace(/\s\s+/g, " ").trim()]);
     }
     setInput({ value: "", visible: false });
   };
@@ -209,7 +209,7 @@ export default function PostForm({ data }) {
             "searchreplace visualblocks code fullscreen",
             "insertdatetime media table paste code help wordcount"
           ],
-          toolbar: `undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help`
+          toolbar: `undo redo | formatselect | bold italic forecolor backcolor removeformat xhtmlxtras | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help`
         }}
       />
       <div style={{ textAlign: "right", marginTop: 10 }}>

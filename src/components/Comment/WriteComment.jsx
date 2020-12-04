@@ -88,13 +88,19 @@ export default function WriteComment({ commentsRef }) {
   return (
     <WriteCommentContainer>
       <h4 className="comment">Write comment</h4>
-      <Form onFinish={handleFinish}>
-        <Form.Item label="Message" labelCol={{ span: 24 }} name="message">
-          <Input.TextArea placeholder="Enter your message here!" />
-          <Button htmlType="submit" style={{ marginTop: 10, float: "right" }}>
-            Submit
-          </Button>
+      <Form onFinish={handleFinish} form={form}>
+        <Form.Item
+          label="Message"
+          labelCol={{ span: 24 }}
+          name="message"
+          initialValue=""
+          rules={[{ required: true, message: "Message is required!" }]}
+        >
+          <Input.TextArea placeholder="Enter your message here!" maxLength={500} />
         </Form.Item>
+        <Button htmlType="submit" style={{ float: "right" }}>
+          Submit
+        </Button>
       </Form>
     </WriteCommentContainer>
   );

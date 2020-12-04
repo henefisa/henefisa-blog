@@ -60,9 +60,7 @@ export default function ListPost({ filter = "all" }) {
 
   useEffect(() => {
     let isMount = true;
-    (async () => {
-      total.current = await getSize();
-    })();
+
     const ref =
       filter === "all"
         ? firebase.firestore().collection("posts").orderBy("createdAt", "desc")
@@ -77,6 +75,13 @@ export default function ListPost({ filter = "all" }) {
         last.current = snapshot.docs[snapshot.docs.length - 1];
         first.current = snapshot.docs[0];
         isMount && setPosts(data);
+        if (filter === "all") {
+          (async () => {
+            total.current = await getSize();
+          })();
+        } else {
+          total.current = data.length;
+        }
       });
     return () => {
       isMount = false;

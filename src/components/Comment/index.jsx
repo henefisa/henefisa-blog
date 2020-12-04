@@ -8,14 +8,6 @@ const CommentContainer = styled.div`
   text-align: center;
   max-height: 500px;
   overflow: auto;
-  &::-webkit-scrollbar {
-    display: block;
-    width: 5px;
-    background: #ddd;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #333;
-  }
   .comment {
     margin-bottom: 50px;
     font-weight: 600;

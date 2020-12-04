@@ -17,18 +17,20 @@ const Background = styled.div`
     align-items: center;
     flex-direction: column;
     height: 100%;
-    color: #fff;
+
     .tags {
       text-transform: uppercase;
       font-weight: normal;
       font-size: 0.875rem;
       margin-bottom: 20px;
+      color: #fff;
     }
 
     .title {
       font-weight: 600;
       margin-bottom: 10px;
       font-size: 2.5rem;
+      color: #fff;
     }
 
     .read-more {

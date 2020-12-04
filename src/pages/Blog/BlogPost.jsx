@@ -21,15 +21,17 @@ const Background = styled.div`
   place-items: center;
   .content {
     text-align: center;
-    color: #fff;
+
     .post-name {
       font-weight: 400;
       font-size: 2.5rem;
       margin-bottom: 10px;
+      color: #fff;
     }
     .details {
       font-weigth: 400;
       font-size: 15px;
+      color: #fff;
     }
   }
 `;
@@ -88,6 +90,7 @@ const PostContent = styled.article`
         margin-right: 5px;
         transition: 0.3s;
         cursor: pointer;
+        color: var(--secondary-color);
         &:hover {
           color: var(--primary-color);
         }
@@ -142,46 +145,14 @@ export default function BlogPost() {
           </Background>
           <Container style={{ maxWidth: 700 }}>
             <PostContent>
-              <div dangerouslySetInnerHTML={{ __html: post?.content }} style={{wordBreak: "break-word"}}></div>
-              {/* <div className="image-container">
-                <div className="large-image">
-                  <img src="/blog-minimal-post-1.jpg" alt="blog post" />
-                </div>
-              </div>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus autem corporis asperiores, quos
-                sunt voluptatem alias dolores facilis. Temporibus iusto reiciendis voluptatum sequi autem aspernatur qui
-                perspiciatis numquam explicabo illo?
-              </p>
-              <blockquote className="blockquote">
-                <p>
-                  Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu,
-                  consequat vitae, eleifend ac, enim.
-                </p>
-              </blockquote>
-              <p>
-                Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In
-                enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-              </p>
-              <div className="image-container">
-                <div className="small-image">
-                  <img src="/blog-minimal-post-1.jpg" alt="blog post" />
-                </div>
-                <div className="small-image">
-                  <img src="/blog-minimal-post-1.jpg" alt="blog post" />
-                </div>
-              </div>
-              <p>
-                You can use the mark tag to highlight text. In enim justo, rhoncus ut, imperdiet a, venenatis vitae,
-                justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
-              </p> */}
+              <div dangerouslySetInnerHTML={{ __html: post?.content }} style={{ wordBreak: "break-word" }}></div>
               <div className="tag-wrapper">
                 <h6>Tags</h6>
                 <div className="tags">
                   {post?.tags.map((tag, index) => (
-                    <span className="tag" key={index}>
+                    <Link className="tag" key={index} to={`/tags?filter=${tag}`}>
                       {tag}
-                    </span>
+                    </Link>
                   ))}
                 </div>
               </div>

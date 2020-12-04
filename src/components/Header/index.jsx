@@ -1,12 +1,11 @@
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../context/Auth";
 import { Container } from "../Layout";
 import firebase from "firebase";
-import Avatar from "react-avatar";
-import Dropdown from "../Dropdown";
+import { Button, Dropdown, Menu } from "antd";
 
 const MainHeader = styled.div`
   background-color: var(--primary-color);
@@ -28,6 +27,8 @@ const MainHeader = styled.div`
       font-size: 1.75rem;
       letter-spacing: 2px;
       font-weight: 600;
+      color: #fff;
+      margin: 0;
     }
     nav .menu {
       display: flex;
@@ -35,6 +36,7 @@ const MainHeader = styled.div`
       align-items: center;
       list-style: none;
       text-transform: uppercase;
+      margin: 0;
       .menu-item {
         padding: 12px 20px;
         &:hover a::before {
@@ -71,7 +73,6 @@ const MainHeader = styled.div`
 export default function Header(props) {
   const [fixed, setFixed] = useState(false);
   const [user] = useAuth();
-  const history = useHistory();
   useEffect(() => {
     function handleScroll() {
       const fixed = window.scrollY > 0;
@@ -84,17 +85,19 @@ export default function Header(props) {
     };
   }, []);
 
-  const options = [
-    { name: "Profile", onClick: () => history.push(`/user/${user.ref.id}`) },
-    { name: "Logout", onClick: () => firebase.auth().signOut() }
-  ];
-
-  if (user?.data?.role?.includes("admin")) {
-    options.splice(1, 0, {
-      name: "Dashboard",
-      onClick: () => history.push("/admin/dashboard")
-    });
-  }
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <Link to={`/profile/${user?.ref?.id}`}>Profile</Link>
+      </Menu.Item>
+      {user?.data?.role?.includes("admin") && (
+        <Menu.Item>
+          <Link to="/admin/dashboard">Dashboard</Link>
+        </Menu.Item>
+      )}
+      <Menu.Item onClick={() => firebase.auth().signOut()}>Logout</Menu.Item>
+    </Menu>
+  );
 
   return (
     <MainHeader {...props} className={clsx({ fixed: fixed })}>
@@ -122,18 +125,19 @@ export default function Header(props) {
         </nav>
         <div className="user">
           {user.ref ? (
-            <Dropdown
-              title={
-                <>
-                  <Avatar name={user.data.firstName + " " + user.data.lastName} round size={50} />
-                  <h3 style={{ fontWeight: 400 }}>{user.data.firstName + " " + user.data.lastName}</h3>
-                </>
-              }
-              options={options}
-            />
+            <Dropdown overlay={menu}>
+              <Button ghost>
+                {user.data.firstName + " " + user.data.lastName}
+              </Button>
+            </Dropdown>
           ) : (
             <>
-              <Link to="/login">Login</Link> / <Link to="/register">Register</Link>
+              <Button ghost>
+                <Link to="/login">Login</Link>
+              </Button>
+              <Button ghost style={{ marginLeft: 10 }}>
+                <Link to="/register">Register</Link>
+              </Button>
             </>
           )}
         </div>
