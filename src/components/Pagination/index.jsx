@@ -45,7 +45,6 @@ export default function Pagination({ current = 1, total = 10, pageSize = 10, onC
   const allPages = calculatePage(total, pageSize);
   const pager = [];
   const pageBufferSize = 2;
-  window.scrollTo({ top: 0, behavior: "smooth" });
   let left = Math.max(1, page - pageBufferSize);
   let right = Math.min(page + pageBufferSize, allPages);
 

@@ -1,13 +1,7 @@
 import React, { memo, useMemo, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined
-} from "@ant-design/icons";
+import { MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, FileOutlined, BarChartOutlined } from "@ant-design/icons";
 
 import firebase from "firebase";
 
@@ -38,7 +32,8 @@ function AdminLayout(props) {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed} style={{ minHeight: "100vh" }}>
+      <Sider trigger={null} collapsible collapsed={collapsed} style={{ minHeight: "100vh" }} breakpoint="lg"
+      collapsedWidth="0">
         <h1
           style={{
             color: "white",
@@ -58,12 +53,14 @@ function AdminLayout(props) {
           onClick={target => history.push(target.key)}
           selectedKeys={[location.pathname]}
         >
-          <Menu.Item key="/admin/dashboard">Dashboard</Menu.Item>
-          <SubMenu title="Users" key="users">
+          <Menu.Item icon={<BarChartOutlined />} key="/admin/dashboard">
+            Dashboard
+          </Menu.Item>
+          <SubMenu title="Users" key="users" icon={<UserOutlined />}>
             <Menu.Item key="/admin/users">All Users</Menu.Item>
             <Menu.Item key="/admin/users/create">Create User</Menu.Item>
           </SubMenu>
-          <SubMenu title="Posts" key="posts">
+          <SubMenu title="Posts" key="posts" icon={<FileOutlined />}>
             <Menu.Item key="/admin/posts">All Posts</Menu.Item>
             <Menu.Item key="/admin/posts/create">Create Post</Menu.Item>
           </SubMenu>
@@ -90,7 +87,7 @@ function AdminLayout(props) {
         </Header>
         <Content>{props.children}</Content>
         <Footer>
-          <h3 style={{textAlign: "center"}}>Henefisa dashboard - Created by Trần Văn Nghĩa</h3>
+          <h3 style={{ textAlign: "center" }}>Henefisa dashboard - Created by Trần Văn Nghĩa</h3>
         </Footer>
       </Layout>
     </Layout>

@@ -66,9 +66,13 @@ function Posts() {
       dataIndex: "tags",
       key: "tags",
       render: tags =>
-        tags?.map(tag => {
+        tags?.map((tag, index) => {
           const tagElement = <Tag>{tag}</Tag>;
-          return <span style={{ display: "inline-block" }}>{tagElement}</span>;
+          return (
+            <span key={index} style={{ display: "inline-block" }}>
+              {tagElement}
+            </span>
+          );
         })
     },
     {

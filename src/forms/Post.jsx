@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import firebase from "firebase";
 import { useAuth } from "../context/Auth";
-import { Button, Input, Form, Tag, notification } from "antd";
+import { Button, Input, Form, Tag, notification, Upload } from "antd";
 import { TweenOneGroup } from "rc-tween-one";
 import { PlusOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
@@ -31,6 +31,8 @@ async function handleUploadImage(blob) {
 export default function PostForm({ data }) {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
+  const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [input, setInput] = useState({
     value: "",
@@ -41,9 +43,11 @@ export default function PostForm({ data }) {
   useEffect(() => {
     setContent(data?.post?.content || "");
     setTags(data?.post?.tags || []);
+    data?.post?.cover && setFileList([{ uid: "this-will-never-got-another-one", thumbUrl: data?.post?.cover }]);
   }, [data]);
 
   const onFinish = async values => {
+    setLoading(true);
     try {
       let ref = {};
       if (data?.type === "edit") {
@@ -79,12 +83,23 @@ export default function PostForm({ data }) {
           });
         }
       });
+      let cover_url;
+      if (fileList[0] && fileList[0].originFileObj) {
+        const snapshot = await firebase
+          .storage()
+          .ref(`cover_images/${fileList[0].uid + "_" + fileList[0].name}`)
+          .put(fileList[0].originFileObj);
 
+        cover_url = await snapshot.ref.getDownloadURL();
+      } else {
+        cover_url = data?.post?.cover || "/blog-minimal-bg.jpg";
+      }
       ref.set({
         authorRef: user.ref,
         commentsRef,
         content,
-        createdAt: firebase.firestore.Timestamp.now(),
+        createdAt: data?.post?.createdAt || firebase.firestore.Timestamp.now(),
+        cover: cover_url,
         title: values.title,
         description: values.description,
         tags
@@ -94,11 +109,14 @@ export default function PostForm({ data }) {
     } catch (err) {
       console.log(err);
       notification.error({ message: "Something went wrong. Please try again!" });
+    } finally {
+      setLoading(false);
     }
   };
 
   const onEditorChange = content => {
     setContent(content);
+    console.log(content);
   };
 
   const handleCloseTag = removedTag => {
@@ -117,6 +135,11 @@ export default function PostForm({ data }) {
       setTags(prevState => [...prevState, input.value.replace(/\s\s+/g, " ").trim()]);
     }
     setInput({ value: "", visible: false });
+  };
+
+  const handleUpload = ({ fileList }) => {
+    setFileList(fileList);
+    console.log(fileList);
   };
 
   const forMap = tag => {
@@ -158,6 +181,22 @@ export default function PostForm({ data }) {
       >
         <Input placeholder="Description" />
       </Form.Item>
+      <p>Cover Background</p>
+      <Upload
+        name="cover-background"
+        beforeUpload={() => false}
+        onChange={handleUpload}
+        accept="image/*"
+        listType="picture-card"
+        fileList={fileList}
+      >
+        {fileList.length < 1 && (
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+          </div>
+        )}
+      </Upload>
       <div style={{ margin: "16px 0" }}>
         <TweenOneGroup
           enter={{
@@ -213,7 +252,9 @@ export default function PostForm({ data }) {
         }}
       />
       <div style={{ textAlign: "right", marginTop: 10 }}>
-        <Button htmlType="submit">Submit</Button>
+        <Button htmlType="submit" loading={loading}>
+          Submit
+        </Button>
       </div>
     </Form>
   ) : null;

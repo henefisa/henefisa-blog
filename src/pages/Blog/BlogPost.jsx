@@ -106,7 +106,6 @@ export default function BlogPost() {
   const [user] = useAuth();
 
   const commentsRef = useRef(null);
-
   useEffect(() => {
     setLoading(true);
     let isMount = true;
@@ -134,7 +133,7 @@ export default function BlogPost() {
         <Loading />
       ) : (
         <>
-          <Background url="/blog-minimal-bg.jpg">
+          <Background url={post?.cover || "/blog-minimal-bg.jpg"}>
             <div className="content">
               <h1 className="post-name">{post?.title}</h1>
               <h4 className="details">

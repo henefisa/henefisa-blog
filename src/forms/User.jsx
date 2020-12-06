@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import firebase from "firebase";
 import { firebaseConfig } from "../index";
 import { Button, Form, Input, message } from "antd";
@@ -8,7 +8,9 @@ let secondApp = null;
 
 export default function UserForm({ data }) {
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
   const onFinish = async values => {
+    setLoading(true);
     try {
       if (data.type === "new") {
         if (!secondApp) secondApp = firebase.initializeApp(firebaseConfig, "secondary");
@@ -43,6 +45,8 @@ export default function UserForm({ data }) {
           message.error(error);
           break;
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,9 +69,8 @@ export default function UserForm({ data }) {
         <Input placeholder="Last Name" />
       </Form.Item>
       <div style={{ textAlign: "right" }}>
-        <Button htmlType="submit">Submit</Button>
-        <Button htmlType="button" danger style={{ marginLeft: 10 }}>
-          Cancel
+        <Button htmlType="submit" loading={loading}>
+          Submit
         </Button>
       </div>
     </Form>

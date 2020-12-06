@@ -83,10 +83,10 @@ const PostContainer = styled.article`
   }
 `;
 
-export default function Post({ overlayColor, title, date, description, id, tags = [], ...rest }) {
+export default function Post({ overlayColor, title, date, description, id, tags = [], cover, ...rest }) {
   return (
     <PostContainer {...rest}>
-      <HoverBox url="/blog-minimal-post-1.jpg" boxHeight="450px" overlayColor={overlayColor} />
+      <HoverBox url={cover || "/blog-minimal-post-1.jpg"} boxHeight="450px" overlayColor={overlayColor} />
       <div className="post-overview">
         <div className="tags">
           {tags.map((tag, index) => (

@@ -57,6 +57,7 @@ export default function Home() {
       .firestore()
       .collection("tags")
       .orderBy("frequency", "desc")
+      .where("frequency", ">", 0)
       .get()
       .then(snapshot => {
         const data = [];

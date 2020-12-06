@@ -88,7 +88,7 @@ export default function Header(props) {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to={`/profile/${user?.ref?.id}`}>Profile</Link>
+        <Link to={`/user/${user?.ref?.id}`}>Profile</Link>
       </Menu.Item>
       {user?.data?.role?.includes("admin") && (
         <Menu.Item>

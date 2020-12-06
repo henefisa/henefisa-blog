@@ -57,7 +57,6 @@ export default function ListPost({ filter = "all" }) {
         });
     }
   }, [page]);
-
   useEffect(() => {
     let isMount = true;
 
@@ -98,6 +97,7 @@ export default function ListPost({ filter = "all" }) {
           date={post.data.createdAt}
           tags={post.data.tags}
           id={post.id}
+          cover={post.data.cover}
         />
       ))}
       <Pagination total={total.current} onChange={handleChange} pageSize={limit} />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import firebase from "firebase";
 import { Button, Card, Col, Form, Input, notification, Row } from "antd";
 
@@ -13,7 +13,7 @@ export default function Login() {
       await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
       await firebase.auth().signInWithEmailAndPassword(email, password);
       notification.success({ message: "Welcome back!" });
-      history.push("/");
+      history.goBack();
     } catch (error) {
       if (error) {
         notification.error({ message: "Wrong email or password!" });
@@ -61,7 +61,9 @@ export default function Login() {
               <Button htmlType="submit" loading={loading}>
                 Login
               </Button>
-              <Button type="link">Create an account!</Button>
+              <Button type="link">
+                <Link to="/register">Create an account!</Link>
+              </Button>
             </div>
           </Form>
         </Card>
