@@ -27,7 +27,7 @@ async function getSizeWithFilter(filter) {
     .collection("posts")
     .where("tags", "array-contains", filter)
     .get()
-    .then(snapshot => console.log(snapshot.size));
+    .then(snapshot => snapshot.size);
 }
 
 export default function ListPost({ filter = "all" }) {
@@ -68,7 +68,6 @@ export default function ListPost({ filter = "all" }) {
   }, [page]);
   useEffect(() => {
     let isMount = true;
-
     const ref =
       filter === "all"
         ? firebase.firestore().collection("posts").orderBy("createdAt", "desc")
@@ -84,9 +83,10 @@ export default function ListPost({ filter = "all" }) {
         first.current = snapshot.docs[0];
         isMount && setPosts(data);
         (async () => {
-          if (filter) {
-            if (filter === "all") total.current = await getSize();
-            else total.current = await getSizeWithFilter(filter);
+          if (filter && filter !== "all") {
+            total.current = await getSizeWithFilter(filter);
+          } else {
+            total.current = await getSize();
           }
         })();
       });

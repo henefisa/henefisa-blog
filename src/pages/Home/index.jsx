@@ -120,12 +120,12 @@ export default function Home() {
                   ))}
                 </Categories>
               </SidebarBox>
-              <SidebarBox>
+              {/* <SidebarBox>
                 <h6 className="title">Popular posts</h6>
                 <SmallPost />
                 <SmallPost />
                 <SmallPost />
-              </SidebarBox>
+              </SidebarBox> */}
               <SidebarBox>
                 <h6 className="title">Tags</h6>
                 <ul className="tags">
