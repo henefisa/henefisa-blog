@@ -9,6 +9,7 @@ import { Button, Dropdown, Menu } from "antd";
 
 const MainHeader = styled.div`
   background-color: var(--primary-color);
+  overflow: auto;
   &.fixed {
     position: fixed;
     z-index: 1000;
@@ -126,9 +127,7 @@ export default function Header(props) {
         <div className="user">
           {user.ref ? (
             <Dropdown overlay={menu}>
-              <Button ghost>
-                {user.data.firstName + " " + user.data.lastName}
-              </Button>
+              <Button ghost>{user.data.firstName + " " + user.data.lastName}</Button>
             </Dropdown>
           ) : (
             <>

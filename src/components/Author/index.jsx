@@ -35,16 +35,16 @@ export default function Author({ author }) {
     <AuthorWrapper>
       <div className="author">
         <Avatar
-          src={author.avatar}
-          name={author.firstName + " " + author.lastName}
+          src={author?.avatar}
+          name={author?.firstName + " " + author?.lastName}
           size={100}
           round
           style={{ marginBottom: 10 }}
         />
         <h5 className="name" onClick={() => history.push(`/user/${author.id}`)}>
-          {author.firstName + " " + author.lastName}
+          {author?.firstName + " " + author?.lastName}
         </h5>
-        <p className="description">{author.description}</p>
+        <p className="description">{author?.description}</p>
       </div>
     </AuthorWrapper>
   );

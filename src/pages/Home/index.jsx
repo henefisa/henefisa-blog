@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Slider from "../../components/Silder/index";
 import { Layout, Content, Sider, Container, Section } from "../../components/Layout/index";
-import SmallPost from "../../components/Post/Small";
+// import SmallPost from "../../components/Post/Small";
 import TagList from "../../components/Tags/index";
 import Box from "../../components/Box";
 import Avatar from "react-avatar";
@@ -49,6 +49,20 @@ const SidebarBox = styled(Box)`
   }
 `;
 
+const RestyleContainer = styled(Container)`
+  .home-sider {
+    display: none;
+  }
+  @media screen and (min-width: 992px) {
+    .home-sider {
+      display: block;
+    }
+    .home-content {
+      padding-right: 25px;
+    }
+  }
+`;
+
 export default function Home() {
   const [tags, setTags] = useState([]);
   const [adminInfo, setAdminInfo] = useState({});
@@ -89,16 +103,16 @@ export default function Home() {
   return (
     <>
       <Slider />
-      <Container>
+      <RestyleContainer>
         <Section style={{ paddingBottom: 0 }}>
           <TagList />
         </Section>
         <Section>
           <Layout>
-            <Content style={{ paddingRight: "25px" }}>
+            <Content className="home-content">
               <ListPost />
             </Content>
-            <Sider style={{ paddingLeft: "25px" }} boxWidth="355">
+            <Sider style={{ paddingLeft: "25px" }} boxWidth="355" className="home-sider">
               <SidebarBox>
                 <h6 className="title">About me</h6>
                 {adminInfo.avatar && <Avatar src={adminInfo.avatar} size={100} round style={{ marginBottom: 10 }} />}
@@ -141,7 +155,7 @@ export default function Home() {
             </Sider>
           </Layout>
         </Section>
-      </Container>
+      </RestyleContainer>
     </>
   );
 }
