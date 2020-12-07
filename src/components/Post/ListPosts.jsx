@@ -84,10 +84,9 @@ export default function ListPost({ filter = "all" }) {
         first.current = snapshot.docs[0];
         isMount && setPosts(data);
         (async () => {
-          if (filter === "all") {
-            total.current = await getSize();
-          } else {
-            total.current = await getSizeWithFilter(filter);
+          if (filter) {
+            if (filter === "all") total.current = await getSize();
+            else total.current = await getSizeWithFilter(filter);
           }
         })();
       });
