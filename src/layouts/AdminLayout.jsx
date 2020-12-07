@@ -1,7 +1,14 @@
 import React, { memo, useMemo, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
-import { MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, FileOutlined, BarChartOutlined } from "@ant-design/icons";
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  UserOutlined,
+  FileOutlined,
+  BarChartOutlined,
+  WechatOutlined
+} from "@ant-design/icons";
 
 import firebase from "firebase";
 
@@ -32,8 +39,7 @@ function AdminLayout(props) {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed} style={{ minHeight: "100vh" }} breakpoint="lg"
-      collapsedWidth="0">
+      <Sider trigger={null} collapsible collapsed={collapsed} style={{ minHeight: "100vh" }}>
         <h1
           style={{
             color: "white",
@@ -63,6 +69,9 @@ function AdminLayout(props) {
           <SubMenu title="Posts" key="posts" icon={<FileOutlined />}>
             <Menu.Item key="/admin/posts">All Posts</Menu.Item>
             <Menu.Item key="/admin/posts/create">Create Post</Menu.Item>
+          </SubMenu>
+          <SubMenu title="Message" key="message" icon={<WechatOutlined />}>
+            <Menu.Item key="/admin/messages">All Messages</Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>

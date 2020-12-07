@@ -59,6 +59,12 @@ export const routes = [
         exact: true,
         component: lazy(() => import("../pages/Admin/Posts/index")),
         role: "admin"
+      },
+      {
+        path: "/admin/messages",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Messages/index")),
+        role: "admin"
       }
     ]
   },
@@ -101,6 +107,18 @@ export const routes = [
         path: "/blog",
         exact: true,
         component: lazy(() => import("../pages/Blog/index")),
+        role: "user"
+      },
+      {
+        path: "/about",
+        exact: true,
+        component: lazy(() => import("../pages/About/index")),
+        role: "user"
+      },
+      {
+        path: "/contact",
+        exact: true,
+        component: lazy(() => import("../pages/Contact/index")),
         role: "user"
       },
       {

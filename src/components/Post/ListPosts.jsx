@@ -21,6 +21,15 @@ async function getSize() {
     .then(snapshot => snapshot.size);
 }
 
+async function getSizeWithFilter(filter) {
+  return await firebase
+    .firestore()
+    .collection("posts")
+    .where("tags", "array-contains", filter)
+    .get()
+    .then(snapshot => console.log(snapshot.size));
+}
+
 export default function ListPost({ filter = "all" }) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(0);
@@ -74,13 +83,13 @@ export default function ListPost({ filter = "all" }) {
         last.current = snapshot.docs[snapshot.docs.length - 1];
         first.current = snapshot.docs[0];
         isMount && setPosts(data);
-        if (filter === "all") {
-          (async () => {
+        (async () => {
+          if (filter === "all") {
             total.current = await getSize();
-          })();
-        } else {
-          total.current = data.length;
-        }
+          } else {
+            total.current = await getSizeWithFilter(filter);
+          }
+        })();
       });
     return () => {
       isMount = false;
