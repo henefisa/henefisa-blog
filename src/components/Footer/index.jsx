@@ -4,10 +4,12 @@ import { Container } from "../Layout";
 
 const MainFooter = styled.footer`
   background: var(--primary-color);
-  height: 250px;
-  color: #fff;
+  height: 150px;
   display: flex;
   align-items: center;
+  h1 {
+    color: #fff;
+  }
 `;
 
 export default function Footer() {

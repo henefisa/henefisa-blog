@@ -126,6 +126,24 @@ export const routes = [
         role: "user"
       },
       {
+        path: "/forums/:name/:postId",
+        exact: true,
+        component: lazy(() => import("../pages/Forums/threadPost")),
+        role: "user"
+      },
+      {
+        path: "/forums/:name",
+        exact: true,
+        component: lazy(() => import("../pages/Forums/thread")),
+        role: "user"
+      },
+      {
+        path: "/forums",
+        exact: true,
+        component: lazy(() => import("../pages/Forums/index")),
+        role: "user"
+      },
+      {
         path: "/",
         exact: true,
         component: lazy(() => import("../pages/Home/index")),

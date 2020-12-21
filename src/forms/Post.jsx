@@ -116,7 +116,6 @@ export default function PostForm({ data }) {
 
   const onEditorChange = content => {
     setContent(content);
-    console.log(content);
   };
 
   const handleCloseTag = removedTag => {
