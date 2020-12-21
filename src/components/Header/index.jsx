@@ -1,5 +1,4 @@
-import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../context/Auth";
@@ -10,16 +9,6 @@ import { Button, Dropdown, Menu } from "antd";
 const MainHeader = styled.div`
   background-color: var(--primary-color);
   overflow: auto;
-  &.fixed {
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    right: 0;
-    .header-content {
-      height: 60px;
-    }
-  }
   .header-content {
     color: #fff;
     height: 80px;
@@ -72,19 +61,7 @@ const MainHeader = styled.div`
 `;
 
 export default function Header(props) {
-  const [fixed, setFixed] = useState(false);
   const [user] = useAuth();
-  useEffect(() => {
-    function handleScroll() {
-      const fixed = window.scrollY > 0;
-      setFixed(fixed);
-    }
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   const menu = (
     <Menu>
@@ -101,7 +78,7 @@ export default function Header(props) {
   );
 
   return (
-    <MainHeader {...props} className={clsx({ fixed: fixed })}>
+    <MainHeader {...props}>
       <Container className="header-content" flex={{ justify: "space-between", align: "center" }}>
         <h1 className="brand">
           <Link to="/" style={{ color: "inherit" }}>
@@ -121,6 +98,9 @@ export default function Header(props) {
             </li>
             <li className="menu-item">
               <Link to="/contact">Contact</Link>
+            </li>
+            <li className="menu-item">
+              <Link to="/forums">Forums</Link>
             </li>
           </ul>
         </nav>
