@@ -9,7 +9,7 @@ export default function BasicLayout({ children }) {
       <LayoutHeader>
         <Header />
       </LayoutHeader>
-      <Content style={{ minHeight: "calc(100vh - 230px)" }}>{children}</Content>
+      <Content style={{ minHeight: "calc(100vh - 150px)", marginTop: 80 }}>{children}</Content>
       <LayoutFooter>
         <Footer />
       </LayoutFooter>

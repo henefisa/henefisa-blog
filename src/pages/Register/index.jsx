@@ -96,7 +96,7 @@ export default function Register() {
               <Button htmlType="submit" loading={loading}>
                 Register
               </Button>
-              <Button type="link">
+              <Button type="link" style={{whiteSpace: "pre-wrap"}}>
                 <Link to="/login">Already have an account? Login now</Link>
               </Button>
             </div>
