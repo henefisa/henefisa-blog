@@ -67,6 +67,30 @@ export const routes = [
         role: "admin"
       },
       {
+        path: "/admin/forums/categories/:name/:postId",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Forums/posts")),
+        role: "admin"
+      },
+      {
+        path: "/admin/forums/categories/:name",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Forums/threads")),
+        role: "admin"
+      },
+      {
+        path: "/admin/forums/categories",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Forums/categories")),
+        role: "admin"
+      },
+      {
+        path: "/admin/forums",
+        exact: true,
+        component: lazy(() => import("../pages/Admin/Forums/index")),
+        role: "admin"
+      },
+      {
         path: "",
         component: lazy(() => import("../pages/403/index"))
       }

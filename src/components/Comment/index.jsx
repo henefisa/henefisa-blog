@@ -101,7 +101,7 @@ export default function Comment({ commentsRef }) {
               key={index}
               time={moment.unix(comment.createdAt.seconds).fromNow()}
               author={
-                <Link style={{ cursor: "pointer" }} to={`/users/${comment.author.id}`}>
+                <Link style={{ cursor: "pointer" }} to={`/user/${comment.author.id}`}>
                   {comment.author.firstName + " " + comment.author.lastName}
                 </Link>
               }

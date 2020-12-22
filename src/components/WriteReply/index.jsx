@@ -1,16 +1,37 @@
 import React, { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { Button, Divider } from "antd";
+import { Button, Divider, notification } from "antd";
 import { useAuth } from "../../context/Auth";
 import { Link } from "react-router-dom";
+import firebase from "firebase";
 
-export default function WriteReply({ thread, post }) {
+export default function WriteReply({ postRef, reload }) {
   const [content, setContent] = useState("");
 
   const [user] = useAuth();
 
   const onEditorChange = content => {
     setContent(content);
+  };
+
+  const handleWriteReply = async () => {
+    try {
+      const data = {
+        author: user.data.firstName + " " + user.data.lastName,
+        authorRef: user.ref,
+        content,
+        createdAt: firebase.firestore.Timestamp.now()
+      };
+      //update replies
+      await postRef.update({
+        replies: firebase.firestore.FieldValue.arrayUnion(data)
+      });
+
+      notification.success({ message: "Done!" });
+      reload(data);
+    } catch (error) {
+      notification.error({ message: error.toString() });
+    }
   };
 
   return (
@@ -33,11 +54,14 @@ export default function WriteReply({ thread, post }) {
               toolbar: `undo redo | formatselect | bold italic forecolor backcolor removeformat xhtmlxtras | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help`
             }}
           />
+          <Button onClick={handleWriteReply} style={{ float: "right", marginTop: 10 }}>
+            Submit
+          </Button>
         </>
       ) : (
         <Divider>
           You must
-          <Button type="link" style={{padding: "0 5px", fontWeight: 500}}>
+          <Button type="link" style={{ padding: "0 5px", fontWeight: 500 }}>
             <Link to="/login">Login</Link>
           </Button>
           to reply!

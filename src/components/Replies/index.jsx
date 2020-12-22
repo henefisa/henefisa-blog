@@ -40,7 +40,7 @@ export default function Replies({ author, content, createdAt, ...rest }) {
         <Divider orientation="right" style={{ fontSize: 12, margin: 0 }}>
           {createdAt}
         </Divider>
-        <Typography.Paragraph>{content}</Typography.Paragraph>
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
       </div>
     </Reply>
   );

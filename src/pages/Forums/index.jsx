@@ -45,8 +45,6 @@ export default function Forums() {
           ...doc.data()
         }));
 
-        console.log(data);
-
         isMount && setData(data);
       } catch (error) {
         setError(true);

@@ -73,6 +73,10 @@ function AdminLayout(props) {
           <SubMenu title="Message" key="message" icon={<WechatOutlined />}>
             <Menu.Item key="/admin/messages">All Messages</Menu.Item>
           </SubMenu>
+          <SubMenu title="Forums" key="forums" icon={<WechatOutlined />}>
+            <Menu.Item key="/admin/forums">Forums</Menu.Item>
+            <Menu.Item key="/admin/forums/categories">All Categories</Menu.Item>
+          </SubMenu>
         </Menu>
       </Sider>
       <Layout>

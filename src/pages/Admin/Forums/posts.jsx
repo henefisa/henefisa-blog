@@ -1,18 +1,18 @@
 import { Card, Divider, Skeleton } from "antd";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Replies from "../../components/Replies";
-import WriteReply from "../../components/WriteReply";
 import firebase from "firebase";
+import NotFoundPage from "../../404";
+import Replies from "../../../components/Replies";
 import { unix } from "moment";
-import NotFoundPage from "../404";
+import WriteReply from "../../../components/WriteReply";
 
-function ThreadPost() {
+export default function Posts() {
   const { name, postId } = useParams();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
+  console.log(data);
   useEffect(() => {
     let isMount = true;
     (async () => {
@@ -45,29 +45,29 @@ function ThreadPost() {
   }
 
   return (
-    <Card style={{ maxWidth: 1200, margin: "40px auto" }}>
-      <Skeleton loading={loading} active />
-      {!loading && (
-        <>
-          <Divider orientation="left">{data?.name}</Divider>
-          <Replies
-            author={data?.author}
-            content={data?.content}
-            createdAt={unix(data?.createdAt?.seconds).format("ll")}
-          />
-          {data?.replies?.map((reply, index) => (
+    <div style={{ padding: 20 }}>
+      <Card>
+        <Skeleton loading={loading} active />
+        {!loading && (
+          <>
+            <Divider orientation="left">{data?.name}</Divider>
             <Replies
-              key={index}
-              author={reply.author}
-              content={reply.content}
-              createdAt={unix(reply.createdAt.seconds).format("ll")}
+              author={data?.author}
+              content={data?.content}
+              createdAt={unix(data?.createdAt?.seconds).format("ll")}
             />
-          ))}
-          <WriteReply postRef={data?.postRef} reload={reloadReplies} />
-        </>
-      )}
-    </Card>
+            {data?.replies?.map((reply, index) => (
+              <Replies
+                key={index}
+                author={reply.author}
+                content={reply.content}
+                createdAt={unix(reply.createdAt.seconds).format("ll")}
+              />
+            ))}
+            <WriteReply postRef={data?.postRef} reload={reloadReplies} />
+          </>
+        )}
+      </Card>
+    </div>
   );
 }
-
-export default memo(ThreadPost);
