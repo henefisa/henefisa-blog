@@ -1,6 +1,3 @@
-// import { lazy } from "react";
-// import BasicLayout from "../layouts/BasicLayout";
-
 import { lazy } from "react";
 import { Redirect } from "react-router-dom";
 import AdminLayout from "../layouts/AdminLayout";
